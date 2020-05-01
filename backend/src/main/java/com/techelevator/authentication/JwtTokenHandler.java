@@ -6,8 +6,8 @@ import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import com.techelevator.model.User;
 import com.techelevator.model.UserDao;
+import com.techelevator.pojo.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class JwtTokenHandler {
     @Autowired
     private UserDao dao;
 
-    public String createToken(String username, String role) {
+    public String createToken(String username, boolean isManager) {
         Date now = new Date();
 
         // We will sign our JWT with our ApiKey secret
@@ -38,7 +38,7 @@ public class JwtTokenHandler {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         // Let's set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(username).claim("rol", role)
+        JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(username).claim("manager", isManager)
                 .signWith(signingKey, signatureAlgorithm);
 
         // if it has been specified, let's add the expiration
@@ -51,7 +51,7 @@ public class JwtTokenHandler {
         return builder.compact();
     }
 
-    public User getUser(String jwtString) throws IOException {
+    public Users getUser(String jwtString) throws IOException {
         if (jwtString == null || !jwtString.startsWith(BEARER_PREFIX)) {
             return null;
         }
@@ -60,7 +60,7 @@ public class JwtTokenHandler {
 
         Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
-        User authedUser = dao.getUserByUsername(claims.getSubject());
+        Users authedUser = dao.getUserByUsername(claims.getSubject());
         return authedUser;
     }
 }
