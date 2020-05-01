@@ -6,6 +6,13 @@ DROP TABLE IF EXISTS time_off;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS company;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS shift_roles;
+DROP TABLE IF EXISTS shift_templates;
+DROP TABLE IF EXISTS roles_templates;
+DROP TABLE IF EXISTS day_templates;
+DROP TABLE IF EXISTS shift_day;
+DROP TABLE IF EXISTS week_templates;
+DROP TABLE IF EXISTS day_week;
 
 CREATE TABLE company (
         id serial PRIMARY KEY,
@@ -48,6 +55,61 @@ CREATE TABLE employee_requests (
         
         CONSTRAINT fk_employee_id FOREIGN KEY (employee_id) REFERENCES employee (id),
         CONSTRAINT fk_time_off_id FOREIGN KEY (time_off_id) REFERENCES time_off (id)
+);
+
+CREATE TABLE shift_roles (
+        id serial PRIMARY KEY,
+        company_id int NOT NULL,
+        title varchar(100) NOT NULL,
+        
+        CONSTRAINT fk_shiftrole_company FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+--TEMPLATE TABLES:
+CREATE TABLE shift_templates (
+        id serial PRIMARY KEY,
+        company_id int NOT NULL,
+        start_time time NOT NULL,
+        end_time time NOT NULL,
+
+        CONSTRAINT fk_shift_templates_company FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE roles_templates (
+        shift_role_id int NOT NULL,
+        shift_template_id int NOT NULL,
+
+        CONSTRAINT pk_roles_templates PRIMARY KEY (shift_role_id, shift_template_id),
+        CONSTRAINT fk_roles_templates_role FOREIGN KEY (shift_role_id) REFERENCES shift_roles(id),
+        CONSTRAINT fk_roles_templates_templates FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id)
+);
+
+CREATE TABLE day_templates (
+        id serial PRIMARY KEY,
+        nickname varchar(250) NOT NULL
+);
+
+CREATE TABLE shift_day (
+        shift_id int NOT NULL,
+        day_id int NOT NULL,
+
+        CONSTRAINT pk_shift_day PRIMARY KEY (shift_id, day_id),
+        CONSTRAINT fk_shift_day_shift FOREIGN KEY (shift_id) REFERENCES shift_templates(id),
+        CONSTRAINT fk_shift_day_day FOREIGN KEY (day_id) REFERENCES day_templates(id)
+);
+
+CREATE TABLE week_templates (
+        id serial PRIMARY KEY,
+        nickname varchar(250) NOT NULL
+);
+
+CREATE TABLE day_week (
+        day_id int NOT NULL,
+        week_id int NOT NULL,
+
+        CONSTRAINT pk_day_week PRIMARY KEY (day_id, week_id),
+        CONSTRAINT fk_day_week_day FOREIGN KEY (day_id) REFERENCES day_templates(id),
+        CONSTRAINT fk_day_week_week FOREIGN KEY (week_id) REFERENCES week_templates(id)
 );
 
 COMMIT;        
