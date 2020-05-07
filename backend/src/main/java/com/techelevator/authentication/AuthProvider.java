@@ -1,6 +1,6 @@
 package com.techelevator.authentication;
 
-import com.techelevator.model.User;
+import com.techelevator.pojo.Users;
 
 public interface AuthProvider {
     /**
@@ -13,7 +13,7 @@ public interface AuthProvider {
      * Returns the currently signed in user.
      * @return the currently signed in user
      */
-    User getCurrentUser();
+    Users getCurrentUser();
 
     /**
      * Signs in a user using the given username and password
@@ -42,7 +42,7 @@ public interface AuthProvider {
      * @param password the new user's password
      * @param role the new user's role
      */
-    void register(String username, String password, String role);
+    void register(String username, String password, boolean isManager);
 
     /**
      * Checks to see if the current user has one of the given roles

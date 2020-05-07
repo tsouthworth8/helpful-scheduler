@@ -1,18 +1,19 @@
 
 BEGIN;
 
+DROP TABLE IF EXISTS day_week;
+DROP TABLE IF EXISTS week_templates;
+DROP TABLE IF EXISTS shift_day;
+DROP TABLE IF EXISTS day_templates;
+DROP TABLE IF EXISTS roles_templates;
+DROP TABLE IF EXISTS shift_templates;
+DROP TABLE IF EXISTS shift_roles;
 DROP TABLE IF EXISTS employee_requests;
 DROP TABLE IF EXISTS time_off;
 DROP TABLE IF EXISTS employee;
-DROP TABLE IF EXISTS company;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS shift_roles;
-DROP TABLE IF EXISTS shift_templates;
-DROP TABLE IF EXISTS roles_templates;
-DROP TABLE IF EXISTS day_templates;
-DROP TABLE IF EXISTS shift_day;
-DROP TABLE IF EXISTS week_templates;
-DROP TABLE IF EXISTS day_week;
+DROP TABLE IF EXISTS company;
+
 
 CREATE TABLE company (
         id serial PRIMARY KEY,

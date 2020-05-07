@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 
-import com.techelevator.model.User;
 import com.techelevator.model.UserDao;
+import com.techelevator.pojo.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,7 +47,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        User authedUser = tokenHandler.getUser(request.getHeader(AUTHORIZATION_HEADER));
+        Users authedUser = tokenHandler.getUser(request.getHeader(AUTHORIZATION_HEADER));
         if (authedUser == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
             return false;
