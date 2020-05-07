@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.techelevator.authentication.PasswordHasher;
+import com.techelevator.pojo.Users;
 
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,24 +44,24 @@ public class JdbcUserDao implements UserDao {
      * @return the new user
      */
     @Override
-    public User saveUser(String userName, String password, String role) {
+    public Users saveUser(String userName, String password, boolean isManager) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
-                "INSERT INTO users(username, password, salt, role) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
-                userName, hashedPassword, saltString, role);
+                "INSERT INTO users(username, password, salt, manager) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
+                userName, hashedPassword, saltString, isManager);
 
-        User newUser = new User();
+        Users newUser = new Users();
         newUser.setId(newId);
         newUser.setUsername(userName);
-        newUser.setRole(role);
+        newUser.setManager(isManager);
 
         return newUser;
     }
 
     @Override
-    public void changePassword(User user, String newPassword) {
+    public void changePassword(Users user, String newPassword) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(newPassword, salt);
         String saltString = new String(Base64.encode(salt));
@@ -78,7 +79,7 @@ public class JdbcUserDao implements UserDao {
      * @return true if the user is found and their password matches
      */
     @Override
-    public User getValidUserWithPassword(String userName, String password) {
+    public Users getValidUserWithPassword(String userName, String password) {
         String sqlSearchForUser = "SELECT * FROM users WHERE UPPER(username) = ?";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSearchForUser, userName.toUpperCase());
@@ -101,30 +102,30 @@ public class JdbcUserDao implements UserDao {
      * @return a List of user objects
      */
     @Override
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<User>();
-        String sqlSelectAllUsers = "SELECT id, username, role FROM users";
+    public List<Users> getAllUsers() {
+        List<Users> users = new ArrayList<Users>();
+        String sqlSelectAllUsers = "SELECT id, username, manager FROM users";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {
-            User user = mapResultToUser(results);
+            Users user = mapResultToUser(results);
             users.add(user);
         }
 
         return users;
     }
 
-    private User mapResultToUser(SqlRowSet results) {
-        User user = new User();
+    private Users mapResultToUser(SqlRowSet results) {
+        Users user = new Users();
         user.setId(results.getLong("id"));
         user.setUsername(results.getString("username"));
-        user.setRole(results.getString("role"));
+        user.setManager(results.getBoolean("manager"));
         return user;
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        String sqlSelectUserByUsername = "SELECT id, username, role FROM users WHERE username = ?";
+    public Users getUserByUsername(String username) {
+        String sqlSelectUserByUsername = "SELECT id, username, manager FROM users WHERE username = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUserByUsername, username);
 
         if (results.next()) {

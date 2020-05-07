@@ -6,7 +6,7 @@ import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.JwtTokenHandler;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.authentication.UserCreationException;
-import com.techelevator.model.User;
+import com.techelevator.pojo.Users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * AccountController
  */
+
+@CrossOrigin
 @RestController
 public class AccountController {
     @Autowired
@@ -26,17 +28,17 @@ public class AccountController {
     private JwtTokenHandler tokenHandler;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(@RequestBody User user, RedirectAttributes flash) throws UnauthorizedException {
+    public String login(@RequestBody Users user, RedirectAttributes flash) throws UnauthorizedException {
         if (auth.signIn(user.getUsername(), user.getPassword())) {
-            User currentUser = auth.getCurrentUser();
-            return tokenHandler.createToken(user.getUsername(), currentUser.getRole());
+            Users currentUser = auth.getCurrentUser();
+            return tokenHandler.createToken(user.getUsername(), currentUser.isManager());
         } else {
             throw new UnauthorizedException();
         }
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public String register(@Valid @RequestBody User user, BindingResult result) throws UserCreationException {
+    public String register(@Valid @RequestBody Users user, BindingResult result) throws UserCreationException {
         if (result.hasErrors()) {
             String errorMessages = "";
             for (ObjectError error : result.getAllErrors()) {
@@ -44,7 +46,7 @@ public class AccountController {
             }
             throw new UserCreationException(errorMessages);
         }
-        auth.register(user.getUsername(), user.getPassword(), user.getRole());
+        auth.register(user.getUsername(), user.getPassword(), user.isManager());
         return "{\"success\":true}";
     }
 

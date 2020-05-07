@@ -1,4 +1,4 @@
-package com.techelevator.model;
+package com.techelevator.pojo;
 
 import javax.validation.constraints.AssertTrue;
 
@@ -7,12 +7,10 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * User
  */
-public class User {
+public class Users {
     @NotBlank(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Role is required")
-    private String role;
     private long id;
 
     @NotBlank(message = "Password is required")
@@ -28,8 +26,28 @@ public class User {
         }
         return true;
     }
+    
+    private boolean isManager;
+    
+    private long companyId;
 
-    public String getPassword() {
+    public boolean isManager() {
+		return isManager;
+	}
+
+	public void setManager(boolean isManager) {
+		this.isManager = isManager;
+	}
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getPassword() {
         return password;
     }
 
@@ -56,20 +74,6 @@ public class User {
      */
     public void setId(long id) {
         this.id = id;
-    }
-
-    /**
-     * @return the role
-     */
-    public String getRole() {
-        return role;
-    }
-
-    /**
-     * @param role the role to set
-     */
-    public void setRole(String role) {
-        this.role = role;
     }
 
     /**

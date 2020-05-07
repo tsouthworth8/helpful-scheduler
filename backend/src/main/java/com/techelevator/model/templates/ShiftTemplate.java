@@ -3,7 +3,7 @@ package com.techelevator.model.templates;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.techelevator.model.ShiftRole;
+import com.techelevator.pojo.ShiftRole;
 
 public class ShiftTemplate implements Template {
 	
