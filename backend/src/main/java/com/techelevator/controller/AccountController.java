@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * AccountController
  */
+
+@CrossOrigin
 @RestController
 public class AccountController {
     @Autowired

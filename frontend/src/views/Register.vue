@@ -51,7 +51,7 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        manager: true,
       },
       registrationErrors: false,
     };

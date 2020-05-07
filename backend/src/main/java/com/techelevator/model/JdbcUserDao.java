@@ -49,7 +49,7 @@ public class JdbcUserDao implements UserDao {
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
-                "INSERT INTO users(username, password, salt, role) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
+                "INSERT INTO users(username, password, salt, manager) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
                 userName, hashedPassword, saltString, isManager);
 
         Users newUser = new Users();
@@ -104,7 +104,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<Users> getAllUsers() {
         List<Users> users = new ArrayList<Users>();
-        String sqlSelectAllUsers = "SELECT id, username, role FROM users";
+        String sqlSelectAllUsers = "SELECT id, username, manager FROM users";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {
@@ -125,7 +125,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Users getUserByUsername(String username) {
-        String sqlSelectUserByUsername = "SELECT id, username, role FROM users WHERE username = ?";
+        String sqlSelectUserByUsername = "SELECT id, username, manager FROM users WHERE username = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUserByUsername, username);
 
         if (results.next()) {
