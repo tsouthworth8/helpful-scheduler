@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.pojo.ShiftRole;
+
 @Component
 public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 	private JdbcTemplate jdbcTemplate;
@@ -55,13 +57,22 @@ public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 	}
 	
 	//HELPER METHODS
-	private static ShiftRole mapRowToShiftRole(SqlRowSet row) {
+	private ShiftRole mapRowToShiftRole(SqlRowSet row) {
 		ShiftRole shiftRole = new ShiftRole();
 		shiftRole.setId(row.getInt("id"));
 		shiftRole.setCompanyId(row.getInt("company_id"));
 		shiftRole.setTitle(row.getString("title"));
 		
 		return shiftRole;
+	}
+	
+	public int getNextShiftRoleId() {
+		SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('shift_roles_id_seq'::regclass)");
+		if(nextIdResult.next()) {
+			return nextIdResult.getInt(1);
+		} else {
+			throw new RuntimeException("Something went wrong while getting an id for the new shift template.");
+		}
 	}
 
 }

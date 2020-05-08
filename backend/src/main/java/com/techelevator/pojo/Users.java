@@ -2,6 +2,7 @@ package com.techelevator.pojo;
 
 import javax.validation.constraints.AssertTrue;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -12,6 +13,10 @@ public class Users {
     private String username;
 
     private long id;
+    
+    @NotBlank(message="Email is required")
+    @Email(message="Please enter a valid email")
+    private String email;
 
     @NotBlank(message = "Password is required")
     private String password;
@@ -31,7 +36,17 @@ public class Users {
     
     private long companyId;
 
-    public boolean isManager() {
+    
+
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isManager() {
 		return isManager;
 	}
 

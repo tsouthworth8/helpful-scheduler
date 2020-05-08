@@ -46,8 +46,14 @@ public class AccountController {
             }
             throw new UserCreationException(errorMessages);
         }
-        auth.register(user.getUsername(), user.getPassword(), user.isManager());
+        auth.register(user.getUsername(), user.getEmail(), user.getPassword(), user.isManager());
         return "{\"success\":true}";
+    }
+    
+    @RequestMapping(path="/forgot-password", method=RequestMethod.POST)
+    public String forgotPassword(@RequestBody String email) {
+    	
+    	return "Heyy";
     }
 
 }

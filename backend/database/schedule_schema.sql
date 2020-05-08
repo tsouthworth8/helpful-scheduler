@@ -23,6 +23,7 @@ CREATE TABLE company (
 CREATE TABLE users (
         id serial PRIMARY KEY,
         username varchar(255) NOT NULL UNIQUE,
+        email varchar(255) NOT NULL UNIQUE,
         password varchar(32) NOT NULL, 
         salt varchar(256) NOT NULL,
         manager boolean NOT NULL,

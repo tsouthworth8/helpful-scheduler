@@ -44,17 +44,18 @@ public class JdbcUserDao implements UserDao {
      * @return the new user
      */
     @Override
-    public Users saveUser(String userName, String password, boolean isManager) {
+    public Users saveUser(String userName, String email, String password, boolean isManager) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
-                "INSERT INTO users(username, password, salt, manager) VALUES (?, ?, ?, ?) RETURNING id", Long.class,
-                userName, hashedPassword, saltString, isManager);
+                "INSERT INTO users(username, email, password, salt, manager) VALUES (?, ?, ?, ?, ?) RETURNING id", Long.class,
+                userName, email, hashedPassword, saltString, isManager);
 
         Users newUser = new Users();
         newUser.setId(newId);
         newUser.setUsername(userName);
+        newUser.setEmail(email);
         newUser.setManager(isManager);
 
         return newUser;
@@ -104,7 +105,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<Users> getAllUsers() {
         List<Users> users = new ArrayList<Users>();
-        String sqlSelectAllUsers = "SELECT id, username, manager FROM users";
+        String sqlSelectAllUsers = "SELECT id, username, email, manager FROM users";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectAllUsers);
 
         while (results.next()) {
@@ -119,13 +120,14 @@ public class JdbcUserDao implements UserDao {
         Users user = new Users();
         user.setId(results.getLong("id"));
         user.setUsername(results.getString("username"));
+        user.setEmail(results.getString("email"));
         user.setManager(results.getBoolean("manager"));
         return user;
     }
 
     @Override
     public Users getUserByUsername(String username) {
-        String sqlSelectUserByUsername = "SELECT id, username, manager FROM users WHERE username = ?";
+        String sqlSelectUserByUsername = "SELECT id, username, email, manager FROM users WHERE username = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUserByUsername, username);
 
         if (results.next()) {
@@ -134,5 +136,17 @@ public class JdbcUserDao implements UserDao {
             return null;
         }
     }
+
+	@Override
+	public Users getUserByEmail(String email) {
+		String sqlSelectUserByEmail = "SELECT id, username, email, manager FROM users WHERE email = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelectUserByEmail, email);
+		
+		if (results.next()) {
+            return mapResultToUser(results);
+        } else {
+            return null;
+        }
+	}
 
 }

@@ -16,7 +16,7 @@ public interface UserDao {
      * @param role the user's role
      * @return the new user
      */
-    public Users saveUser(String userName, String password, boolean isManager);
+    public Users saveUser(String userName, String email, String password, boolean isManager);
 
     public void changePassword(Users user, String newPassword);
 
@@ -38,5 +38,7 @@ public interface UserDao {
     public List<Users> getAllUsers();
 
     public Users getUserByUsername(String username);
+    
+    public Users getUserByEmail(String email);
 
 }
