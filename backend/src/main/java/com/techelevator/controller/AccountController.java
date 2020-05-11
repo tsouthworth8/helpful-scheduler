@@ -2,7 +2,10 @@ package com.techelevator.controller;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +20,7 @@ import com.techelevator.authentication.JwtTokenHandler;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.authentication.UserCreationException;
 import com.techelevator.model.CompanyDao;
+import com.techelevator.model.UserDao;
 import com.techelevator.pojo.Users;
 
 /**
@@ -34,6 +38,12 @@ public class AccountController {
     
     @Autowired
     private CompanyDao company;
+    
+    @Autowired
+    private UserDao userDAO;
+    
+    @Autowired
+    private JavaMailSender mailSender;
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(@RequestBody Users user, RedirectAttributes flash) throws UnauthorizedException {
@@ -63,9 +73,25 @@ public class AccountController {
     }
     
     @RequestMapping(path="/forgot-password", method=RequestMethod.POST)
-    public String forgotPassword(@RequestBody String email) {
+    public String forgotPassword(@RequestBody String emailAddress) {
+    	Users user = userDAO.getUserByEmail(emailAddress);
+    	String newPassword = RandomStringUtils.randomAlphanumeric(12);
     	
-    	return "Heyy";
+    	if(user != null) {
+    		userDAO.changePassword(user, newPassword);
+    		
+    		// creates a simple e-mail object
+            SimpleMailMessage email = new SimpleMailMessage();
+            String message = "Your account password has been reset to " + newPassword + ". Please use this to log in and change your password immediately.";
+            email.setTo(emailAddress);
+            email.setSubject("Helpful Scheduler - Password Reset");
+            email.setText(message);
+             
+            // sends the e-mail
+            mailSender.send(email);
+    	}
+    	
+    	return emailAddress;
     }
 
 }
