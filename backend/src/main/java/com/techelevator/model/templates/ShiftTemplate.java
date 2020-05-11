@@ -10,7 +10,23 @@ public class ShiftTemplate implements Template {
 	private int id;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private List<ShiftRole> allowedShiftRoles;
+	private List<Integer> allowedShiftRoles;
+	
+	public ShiftTemplate(int id, LocalTime startTime, LocalTime endTime, List<Integer> allowedShiftRoles) {
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.allowedShiftRoles = allowedShiftRoles;
+	}
+	
+	public ShiftTemplate(LocalTime startTime, LocalTime endTime, List<Integer> allowedShiftRoles) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.allowedShiftRoles = allowedShiftRoles;
+	}
+	
+	public ShiftTemplate() {
+	}
 	
 	
 	public int getId() {
@@ -31,10 +47,10 @@ public class ShiftTemplate implements Template {
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
 	}
-	public List<ShiftRole> getAllowedShiftRoles() {
+	public List<Integer> getAllowedShiftRoles() {
 		return allowedShiftRoles;
 	}
-	public void setAllowedShiftRoles(List<ShiftRole> allowedShiftRoles) {
+	public void setAllowedShiftRoles(List<Integer> allowedShiftRoles) {
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	

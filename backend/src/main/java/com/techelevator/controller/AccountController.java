@@ -56,10 +56,16 @@ public class AccountController {
         }
         company.addCompany(user.getCompanyName());
         long companyId = company.getCompanyIdByName(user.getCompanyName());
-        auth.register(user.getUsername(), user.getPassword(), user.isManager(), companyId);
+        auth.register(user.getUsername(), user.getEmail(), user.getPassword(), user.isManager(), companyId);
         
         
         return "{\"success\":true}";
+    }
+    
+    @RequestMapping(path="/forgot-password", method=RequestMethod.POST)
+    public String forgotPassword(@RequestBody String email) {
+    	
+    	return "Heyy";
     }
 
 }

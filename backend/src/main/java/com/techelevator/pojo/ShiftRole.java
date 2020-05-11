@@ -6,6 +6,20 @@ public class ShiftRole {
 	private int companyId;
 	private String title;
 	
+	public ShiftRole(int id, int companyId, String title) {
+		this.id = id;
+		this.companyId = companyId;
+		this.title = title;
+	}
+	
+	public ShiftRole(int companyId, String title) {
+		this.companyId = companyId;
+		this.title = title;
+	}
+	
+	public ShiftRole() {
+	}
+	
 	
 	public int getId() {
 		return id;
