@@ -45,12 +45,15 @@ public class JdbcUserDao implements UserDao {
      */
     @Override
     public Users saveUser(String userName, String email, String password, boolean isManager) {
+    public Users saveUser(String userName, String password, boolean isManager, long companyId) {
         byte[] salt = passwordHasher.generateRandomSalt();
         String hashedPassword = passwordHasher.computeHash(password, salt);
         String saltString = new String(Base64.encode(salt));
         long newId = jdbcTemplate.queryForObject(
                 "INSERT INTO users(username, email, password, salt, manager) VALUES (?, ?, ?, ?, ?) RETURNING id", Long.class,
                 userName, email, hashedPassword, saltString, isManager);
+                "INSERT INTO users(username, password, salt, manager, company_id) VALUES (?, ?, ?, ?, ?) RETURNING id", Long.class,
+                userName, hashedPassword, saltString, isManager, companyId);
 
         Users newUser = new Users();
         newUser.setId(newId);

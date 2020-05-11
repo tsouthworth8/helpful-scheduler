@@ -17,6 +17,7 @@ public interface UserDao {
      * @return the new user
      */
     public Users saveUser(String userName, String email, String password, boolean isManager);
+    public Users saveUser(String userName, String password, boolean isManager, long companyId);
 
     public void changePassword(Users user, String newPassword);
 

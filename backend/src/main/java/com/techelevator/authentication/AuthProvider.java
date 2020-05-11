@@ -43,6 +43,7 @@ public interface AuthProvider {
      * @param role the new user's role
      */
     void register(String username, String email, String password, boolean isManager);
+    void register(String username, String password, boolean isManager, long companyId);
 
     /**
      * Checks to see if the current user has one of the given roles

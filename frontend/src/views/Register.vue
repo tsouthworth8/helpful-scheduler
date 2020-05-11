@@ -5,6 +5,7 @@
       <div class="alert alert-danger" role="alert" v-if="registrationErrors">
         There were problems registering this user.
       </div>
+      <div v-if="!userRegister">
       <label for="username" class="sr-only">Username</label>
       <input
         type="text"
@@ -45,10 +46,26 @@
       <router-link :to="{ name: 'login' }">
         Have an account?
       </router-link>
+      <button v-on:click="switchRegistration">
+        Continue Registration
+      </button>
+      </div>
+
+    <div v-if="userRegister">
+      <input
+        type="companyName"
+        id="companyName"
+        class="form-control"
+        placeholder="Company Name"
+        v-model="user.companyName"
+        required
+      />
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Create Account
       </button>
-    </form>
+    </div>
+    </form>    
+
   </div>
 </template>
 
@@ -63,8 +80,10 @@ export default {
         password: '',
         confirmPassword: '',
         manager: true,
+        companyName: '',
       },
       registrationErrors: false,
+      userRegister: false,
     };
   },
   methods: {
@@ -82,11 +101,22 @@ export default {
             this.$router.push({ path: '/login', query: { registration: 'success' } });
           } else {
             this.registrationErrors = true;
+            this.userRegister = false;
+            this.clearInfo();
           }
         })
 
         .then((err) => console.error(err));
     },
+    switchRegistration(){
+      this.userRegister = !this.userRegister;
+    },
+    clearInfo(){
+      this.user.username = '';
+      this.user.password = '';
+      this.user.confirmPassword = '';
+      this.user.companyName = '';
+    }
   },
 };
 </script>
