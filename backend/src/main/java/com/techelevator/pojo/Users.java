@@ -30,8 +30,18 @@ public class Users {
     private boolean isManager;
     
     private long companyId;
+    
+    private String companyName;
 
-    public boolean isManager() {
+    public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public boolean isManager() {
 		return isManager;
 	}
 
