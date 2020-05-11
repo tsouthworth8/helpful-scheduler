@@ -46,8 +46,6 @@ public class Users {
 		this.companyName = companyName;
 	}
 
-    
-
     public String getEmail() {
 		return email;
 	}

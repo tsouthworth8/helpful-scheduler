@@ -81,9 +81,9 @@ public class RequestAuthProviderTest {
 
     @Test
     public void registerTest() {
-        sut.register("TEST", "TESTEMAIL", "TESTPASS", true);
+        sut.register("TEST", "TESTEMAIL", "TESTPASS", true, 99);
 
-        verify(mockedDao).saveUser("TEST", "TESTEMAIL", "TESTPASS", true);
+        verify(mockedDao).saveUser("TEST", "TESTEMAIL", "TESTPASS", true, 99);
     }
 
     @Test
