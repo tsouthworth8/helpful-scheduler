@@ -1,12 +1,18 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
-    <p>You must be authenticated to see this</p>
+    <h1>Landing Page</h1>
+    <employee-invite></employee-invite>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import EmployeeInvite from "../components/EmployeeInvite";
 export default {
-  name: 'home'
+  name: 'home',
+  components: {
+    EmployeeInvite
+  }
 }
+
 </script>

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import javax.servlet.http.HttpServletRequest;
 
 import com.techelevator.model.UserDao;
-import com.techelevator.pojo.Users;
+import com.techelevator.pojo.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void isLoggedInSuccessTest() {
-        when(mockedRequest.getAttribute(RequestAuthProvider.USER_KEY)).thenReturn(new Users());
+        when(mockedRequest.getAttribute(RequestAuthProvider.USER_KEY)).thenReturn(new User());
 
         assertTrue(sut.isLoggedIn());
     }
@@ -58,13 +58,13 @@ public class RequestAuthProviderTest {
 
     @Test
     public void getCurrentUserWithUserTest() {
-        Users mockedUser = new Users();
+        User mockedUser = new User();
         mockedUser.setId(0);
         mockedUser.setUsername("TEST");
 
         when(mockedRequest.getAttribute(RequestAuthProvider.USER_KEY)).thenReturn(mockedUser);
 
-        Users fromSut = sut.getCurrentUser();
+        User fromSut = sut.getCurrentUser();
 
         assertEquals(mockedUser.getId(), fromSut.getId());
         assertEquals(mockedUser.getUsername(), fromSut.getUsername());
@@ -74,7 +74,7 @@ public class RequestAuthProviderTest {
     public void getCurrentUserWithNullTest() {
         when(mockedRequest.getAttribute(RequestAuthProvider.USER_KEY)).thenReturn(null);
 
-        Users fromSut = sut.getCurrentUser();
+        User fromSut = sut.getCurrentUser();
 
         assertNull(fromSut);
     }
@@ -88,7 +88,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void signInSuccessTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         when(mockedDao.getValidUserWithPassword("TEST", "TEST")).thenReturn(testUser);
@@ -106,7 +106,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void changePasswordSuccessTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
 
@@ -119,7 +119,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void changePasswordBadPasswordTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
 
@@ -132,7 +132,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void changePasswordNoOneLoggedInTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
 
@@ -145,7 +145,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleSuccessTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);
@@ -157,7 +157,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleFailTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);
@@ -169,7 +169,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleMultipleSuccessTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);
@@ -181,7 +181,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleMultipleFailTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);
@@ -193,7 +193,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleNullTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);
@@ -205,7 +205,7 @@ public class RequestAuthProviderTest {
 
     @Test
     public void hasRoleEmptyTest() {
-        Users testUser = new Users();
+        User testUser = new User();
         testUser.setId(0);
         testUser.setUsername("TEST");
         testUser.setManager(true);

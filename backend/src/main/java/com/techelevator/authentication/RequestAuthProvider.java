@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 
 import com.techelevator.model.UserDao;
-import com.techelevator.pojo.Users;
+import com.techelevator.pojo.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,13 +32,13 @@ public class RequestAuthProvider implements AuthProvider {
     }
 
     @Override
-    public Users getCurrentUser() {
-        return (Users) request.getAttribute(USER_KEY);
+    public User getCurrentUser() {
+        return (User) request.getAttribute(USER_KEY);
     }
 
     @Override
     public boolean signIn(String username, String password) {
-        Users authenticatedUser = dao.getValidUserWithPassword(username, password);
+        User authenticatedUser = dao.getValidUserWithPassword(username, password);
         if (authenticatedUser != null) {
             request.setAttribute(USER_KEY, authenticatedUser);
             return true;
@@ -54,11 +54,11 @@ public class RequestAuthProvider implements AuthProvider {
 
     @Override
     public boolean changePassword(String existingPassword, String newPassword) {
-        Users userFromSession = (Users) request.getAttribute(USER_KEY);
+        User userFromSession = (User) request.getAttribute(USER_KEY);
         if (userFromSession == null) {
             return false;
         }
-        Users userFromDb = dao.getValidUserWithPassword(userFromSession.getUsername(), existingPassword);
+        User userFromDb = dao.getValidUserWithPassword(userFromSession.getUsername(), existingPassword);
         if (userFromDb != null && userFromDb.getId() == userFromDb.getId()) {
             dao.changePassword(userFromSession, newPassword);
             return true;
@@ -74,7 +74,7 @@ public class RequestAuthProvider implements AuthProvider {
 
     @Override
     public boolean userHasRole(String[] roles) {
-        Users currentUser = getCurrentUser();
+        User currentUser = getCurrentUser();
         if (currentUser != null && roles != null) {
             return Arrays.asList(roles).contains(currentUser.isManager());
         } else {

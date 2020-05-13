@@ -1,6 +1,6 @@
 package com.techelevator.authentication;
 
-import com.techelevator.pojo.Users;
+import com.techelevator.pojo.User;
 
 public interface AuthProvider {
     /**
@@ -13,7 +13,7 @@ public interface AuthProvider {
      * Returns the currently signed in user.
      * @return the currently signed in user
      */
-    Users getCurrentUser();
+    User getCurrentUser();
 
     /**
      * Signs in a user using the given username and password

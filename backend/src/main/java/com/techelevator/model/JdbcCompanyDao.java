@@ -44,6 +44,18 @@ public class JdbcCompanyDao implements CompanyDao {
 		
 		return id;
 	}
+	
+	@Override
+	public String getCompanyNameById(long companyId) {
+		
+		String getName = "SELECT name FROM company WHERE id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(getName, companyId);
+		
+		results.next();
+		String name = results.getString(1);
+		
+		return name;
+	}
 
 	private long getCompanyId() {
 		String sqlNextId = "SELECT nextval('company_id_seq')";
