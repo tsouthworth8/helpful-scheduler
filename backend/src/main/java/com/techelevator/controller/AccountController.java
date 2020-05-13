@@ -89,9 +89,11 @@ public class AccountController {
              
             // sends the e-mail
             mailSender.send(email);
+    	} else {
+    		return "There is no account linked to that email address.";
     	}
     	
-    	return emailAddress;
+    	return "Please check your email for a message containing your new password.";
     }
 
 }
