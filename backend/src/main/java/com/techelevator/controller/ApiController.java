@@ -58,7 +58,7 @@ public class ApiController {
     	
     	SimpleMailMessage newEmail = new SimpleMailMessage();
     	String message = "You have been invited to join " + companyName + " Helpful Scheduler page"
-    			+ "/n http://localhost:8081/register?id=" + companyId;
+    			+ "\n http://localhost:8081/register?id=" + companyId;
     	
     	newEmail.setTo(email + ".com");
     	newEmail.setSubject("Helpful Scheduler Invite");
