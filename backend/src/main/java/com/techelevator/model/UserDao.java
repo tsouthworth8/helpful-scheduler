@@ -2,7 +2,7 @@ package com.techelevator.model;
 
 import java.util.List;
 
-import com.techelevator.pojo.Users;
+import com.techelevator.pojo.User;
 
 public interface UserDao {
 
@@ -16,9 +16,9 @@ public interface UserDao {
      * @param role the user's role
      * @return the new user
      */
-    public Users saveUser(String userName, String email, String password, boolean isManager, long companyId);
+    public User saveUser(String userName, String email, String password, boolean isManager, long companyId);
 
-    public void changePassword(Users user, String newPassword);
+    public void changePassword(User user, String newPassword);
 
     /**
      * Look for a user with the given username and password. Since we don't
@@ -29,16 +29,18 @@ public interface UserDao {
      * @param password the password of the user we are checking
      * @return true if the user is found and their password matches
      */
-    public Users getValidUserWithPassword(String userName, String password);
+    public User getValidUserWithPassword(String userName, String password);
 
     /**
      * Get all of the users from the database.
      * @return a List of user objects
      */
-    public List<Users> getAllUsers();
+    public List<User> getAllUsers();
 
-    public Users getUserByUsername(String username);
+    public User getUserByUsername(String username);
     
-    public Users getUserByEmail(String email);
+    public User getUserByEmail(String email);
+    
+    public long getCompanyIdByUserId(long userId);
 
 }

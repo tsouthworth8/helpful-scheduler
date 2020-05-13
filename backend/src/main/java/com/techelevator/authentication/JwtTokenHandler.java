@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import com.techelevator.model.UserDao;
-import com.techelevator.pojo.Users;
+import com.techelevator.pojo.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +51,7 @@ public class JwtTokenHandler {
         return builder.compact();
     }
 
-    public Users getUser(String jwtString) throws IOException {
+    public User getUser(String jwtString) throws IOException {
         if (jwtString == null || !jwtString.startsWith(BEARER_PREFIX)) {
             return null;
         }
@@ -60,7 +60,7 @@ public class JwtTokenHandler {
 
         Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
-        Users authedUser = dao.getUserByUsername(claims.getSubject());
+        User authedUser = dao.getUserByUsername(claims.getSubject());
         return authedUser;
     }
 }
