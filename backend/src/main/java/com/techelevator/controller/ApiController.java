@@ -1,10 +1,13 @@
 package com.techelevator.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +16,6 @@ import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.model.CompanyDao;
 import com.techelevator.model.UserDao;
-import com.techelevator.pojo.User;
 
 /**
  * ApiController
@@ -50,8 +52,10 @@ public class ApiController {
         return "Success";
     }
     
-    @RequestMapping(path = "/invite/{email}", method = RequestMethod.GET)
-    public String employeeInvite(@PathVariable String email) {
+    @RequestMapping(path = "/invite", method = RequestMethod.POST)
+    public String employeeInvite(@RequestBody String email) throws UnsupportedEncodingException {
+    	email = URLDecoder.decode(email, "UTF-8");
+    	email = email.substring(0, email.length() - 1);
     	
     	long companyId = user.getCompanyIdByUserId(auth.getCurrentUser().getId());
     	String companyName = company.getCompanyNameById(companyId);
@@ -60,12 +64,12 @@ public class ApiController {
     	String message = "You have been invited to join " + companyName + " Helpful Scheduler page"
     			+ "\n http://localhost:8081/register?id=" + companyId;
     	
-    	newEmail.setTo(email + ".com");
+    	newEmail.setTo(email);
     	newEmail.setSubject("Helpful Scheduler Invite");
     	newEmail.setText(message);
     	
     	mailSender.send(newEmail);
     	
-    	return email + ".com";
+    	return email;
     }
 }
