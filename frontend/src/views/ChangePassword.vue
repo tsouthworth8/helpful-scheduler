@@ -2,13 +2,22 @@
     <div id="change-password">
         <h2>Change your password</h2>
         <form @submit.prevent="submitForm">
+            <label for="password">Enter your current password:</label>
+            <input
+                type="text"
+                id="old-password"
+                class="form-control"
+                placeholder="Current password"
+                v-model="passwordUpdate.oldPassword"
+                required
+            />
             <label for="password">Enter your new password:</label>
             <input
                 type="text"
-                id="password"
+                id="new-password"
                 class="form-control"
-                placeholder="Password"
-                v-model="newPassword"
+                placeholder="New password"
+                v-model="passwordUpdate.newPassword"
                 required
             />
             <label for="password">Confirm new password:</label>
@@ -16,10 +25,11 @@
                 type="text"
                 id="confirm-password"
                 class="form-control"
-                placeholder="Confirm password"
+                placeholder="Confirm new password"
+                v-model="passwordUpdate.confirmNewPassword"
                 required
             />
-            <button type="submit" @click="submitForm">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
 </template>
@@ -32,25 +42,23 @@ export default {
   name: 'change-password',
   data() {
       return {
-          newPassword: '',
-          confirmNewPassword: '',
-          passwordsMatch: false,
+          passwordUpdate: {
+              oldPassword: '',
+              newPassword: '',
+              confirmNewPassword: '',
+          }
       }
   },
   methods: {
-      checkPasswordsMatch() {
-          if(this.newPassword == this.confirmNewPassword) {
-              this.passwordsMatch = true;
-          } else {
-              this.passwordsMatch = false;
-          }
-      },
+    //   checkPasswordsMatch() {
+    //       if(this.newPassword == this.confirmNewPassword) {
+    //           this.passwordsMatch = true;
+    //       } else {
+    //           this.passwordsMatch = false;
+    //       }
+    //   },
       submitForm() {
-        this.checkPasswordsMatch();
-        console.log("Passwords dont match");
-        if(this.passwordsMatch) {
-            console.log("Passwords match");
-            axios.post(`${process.env.VUE_APP_REMOTE_API}/change-password`, this.newPassword)
+            axios.post(`${process.env.VUE_APP_REMOTE_API}/change-password`, this.passwordUpdate)
             .then(function (response) {
                 console.log(response);
             })
@@ -59,7 +67,6 @@ export default {
             });
         }
       }
-  }
 }
 </script>
 

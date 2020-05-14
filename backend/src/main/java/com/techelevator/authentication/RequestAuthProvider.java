@@ -46,6 +46,18 @@ public class RequestAuthProvider implements AuthProvider {
             return false;
         }
     }
+    
+    @Override
+    public boolean isCurrentUserPasswordCorrect(String password) {
+        User currentUser = (User) request.getAttribute(USER_KEY);
+        String username = currentUser.getUsername();
+        User authenticatedUser = dao.getValidUserWithPassword(username, password);
+        if (authenticatedUser != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public void logOff() {
@@ -56,6 +68,7 @@ public class RequestAuthProvider implements AuthProvider {
     public boolean changePassword(String existingPassword, String newPassword) {
         User userFromSession = (User) request.getAttribute(USER_KEY);
         if (userFromSession == null) {
+        	System.out.println("User from session null.");
             return false;
         }
         User userFromDb = dao.getValidUserWithPassword(userFromSession.getUsername(), existingPassword);
@@ -63,6 +76,7 @@ public class RequestAuthProvider implements AuthProvider {
             dao.changePassword(userFromSession, newPassword);
             return true;
         } else {
+        	System.out.println("User from DB null.");
             return false;
         }
     }

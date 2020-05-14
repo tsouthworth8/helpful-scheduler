@@ -22,7 +22,7 @@ import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.authentication.UserCreationException;
 import com.techelevator.model.CompanyDao;
 import com.techelevator.model.UserDao;
-import com.techelevator.pojo.Passwords;
+import com.techelevator.pojo.PasswordUpdate;
 import com.techelevator.pojo.User;
 
 /**
@@ -104,12 +104,13 @@ public class AccountController {
 	}
 	
 	@RequestMapping(path = "/change-password", method = RequestMethod.POST)
-	public boolean changePassword(@RequestBody String newPassword) {
+	public boolean changePassword(@RequestBody PasswordUpdate passwords) {
 		System.out.println("Controller reached.");
-		User currentUser = auth.getCurrentUser();
-		userDAO.changePassword(currentUser, newPassword);
 		
-		return true;
+		String oldPassword = passwords.getOldPassword();
+		String newPassword = passwords.getNewPassword();
+		
+		return auth.changePassword(oldPassword, newPassword);
 	}
 
 }

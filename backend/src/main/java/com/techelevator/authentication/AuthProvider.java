@@ -50,4 +50,11 @@ public interface AuthProvider {
      * @return true, if the user has one of the roles
      */
     boolean userHasRole(String[] roles);
+    
+    /**
+     * Checks to see if the current user has entered their correct password while logged in.
+     * @param password entered by user
+     * @return true, if the password matches the current user's existing password
+     */
+    public boolean isCurrentUserPasswordCorrect(String password);
 }

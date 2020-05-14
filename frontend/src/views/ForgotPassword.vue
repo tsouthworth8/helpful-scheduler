@@ -48,18 +48,19 @@ export default {
                 .then((response) => {
                 if (response.ok) {
                     return response.text();
-                } else {
-                    this.invalidCredentials = true;
                 }
                 })
                 .then((result) => {
                 if (result != undefined) {
                     console.log(result);
                     this.submitted = true;
-                    //this.$router.push('/');
+                    this.clearInfo();
                 }
                 })
                 .catch((err) => console.error(err));
+            },
+            clearInfo(){
+                this.email = '';
             },
     }
   }
