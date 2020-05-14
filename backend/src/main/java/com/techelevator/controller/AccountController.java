@@ -105,7 +105,6 @@ public class AccountController {
 	
 	@RequestMapping(path = "/change-password", method = RequestMethod.POST)
 	public boolean changePassword(@RequestBody PasswordUpdate passwords) {
-		System.out.println("Controller reached.");
 		
 		String oldPassword = passwords.getOldPassword();
 		String newPassword = passwords.getNewPassword();

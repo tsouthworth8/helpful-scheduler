@@ -68,7 +68,6 @@ public class RequestAuthProvider implements AuthProvider {
     public boolean changePassword(String existingPassword, String newPassword) {
         User userFromSession = (User) request.getAttribute(USER_KEY);
         if (userFromSession == null) {
-        	System.out.println("User from session null.");
             return false;
         }
         User userFromDb = dao.getValidUserWithPassword(userFromSession.getUsername(), existingPassword);
@@ -76,7 +75,6 @@ public class RequestAuthProvider implements AuthProvider {
             dao.changePassword(userFromSession, newPassword);
             return true;
         } else {
-        	System.out.println("User from DB null.");
             return false;
         }
     }

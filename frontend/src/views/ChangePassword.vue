@@ -1,6 +1,8 @@
 <template>
     <div id="change-password">
         <h2>Change your password</h2>
+
+        <p v-if="matchAlert">Your new password entries must match.</p>
         <form @submit.prevent="submitForm">
             <label for="password">Enter your current password:</label>
             <input
@@ -31,6 +33,9 @@
             />
             <button type="submit">Submit</button>
         </form>
+
+        <p id="result-alert"></p>
+
     </div>
 </template>
 
@@ -46,25 +51,34 @@ export default {
               oldPassword: '',
               newPassword: '',
               confirmNewPassword: '',
-          }
+          },
+          matchAlert: false,
       }
   },
   methods: {
-    //   checkPasswordsMatch() {
-    //       if(this.newPassword == this.confirmNewPassword) {
-    //           this.passwordsMatch = true;
-    //       } else {
-    //           this.passwordsMatch = false;
-    //       }
-    //   },
       submitForm() {
-            axios.post(`${process.env.VUE_APP_REMOTE_API}/change-password`, this.passwordUpdate)
+          if(this.passwordUpdate.newPassword == this.passwordUpdate.confirmNewPassword) {
+            this.matchAlert = false;
+
+            axios.post(`${process.env.VUE_APP_REMOTE_API}/change-password`, this.passwordUpdate, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("Authorization")
+                }
+            })
             .then(function (response) {
                 console.log(response);
+                if(response.data === true) {
+                    document.getElementById("result-alert").innerText = "Your password has been successfully updated."
+                } else {
+                    document.getElementById("result-alert").innerText = "There was an error updating your password."
+                }
             })
             .catch(function (error) {
                 console.log(error);
             });
+          } else {
+              this.matchAlert = true;
+          }
         }
       }
 }
