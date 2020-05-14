@@ -9,6 +9,7 @@
           id="email"
           placeholder="Employee email"
           v-model="email"
+          required
           autofocus
         />
       </span>
@@ -32,7 +33,7 @@ export default {
   methods: {
     employeeInvite() {
       axios
-        .get(`${process.env.VUE_APP_REMOTE_API}/api/invite/${this.email}`, 
+        .post(`${process.env.VUE_APP_REMOTE_API}/api/invite`, this.email, 
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("Authorization")
