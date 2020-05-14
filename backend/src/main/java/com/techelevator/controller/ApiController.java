@@ -66,6 +66,7 @@ public class ApiController {
     	
     	mailSender.send(newEmail);
     	
+    	
     	return email + ".com";
     }
 }
