@@ -60,6 +60,7 @@
         v-model="user.companyName"
         required
       />
+
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Create Account
       </button>
@@ -117,8 +118,11 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Create Account
       </button>
-      
     </form>
+
+
+
+
   </div>
 </template>
 
@@ -139,7 +143,6 @@ export default {
       registrationErrors: false,
       userRegister: false,
       employee: false,
-      
     };
   },
   methods: {
