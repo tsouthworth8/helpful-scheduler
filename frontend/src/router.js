@@ -6,6 +6,7 @@ import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import ForgotPassword from './views/ForgotPassword.vue'
 import ChangePassword from './views/ChangePassword.vue'
+import Schedule from './views/Schedule.vue'
 
 Vue.use(Router)
 
@@ -60,6 +61,14 @@ const router = new Router({
       component: ChangePassword,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: "/schedule",
+      name: "schedule",
+      component: Schedule,
+      meta: {
+        requiresAuth: false
       }
     },
   ]
