@@ -5,6 +5,7 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import ForgotPassword from './views/ForgotPassword.vue'
+import ChangePassword from './views/ChangePassword.vue'
 
 Vue.use(Router)
 
@@ -51,6 +52,14 @@ const router = new Router({
       component: ForgotPassword,
       meta: {
         requiresAuth: false
+      }
+    },
+    {
+      path: "/password",
+      name: "change-password",
+      component: ChangePassword,
+      meta: {
+        requiresAuth: true
       }
     },
   ]
