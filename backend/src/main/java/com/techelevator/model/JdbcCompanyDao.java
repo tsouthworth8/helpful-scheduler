@@ -22,7 +22,7 @@ public class JdbcCompanyDao implements CompanyDao {
 	@Override
 	public Company addCompany(String companyName) {
 		Company company = new Company();
-		long companyId = getCompanyId();
+		long companyId = getNextCompanyId();
 		
 		String addCompany = "INSERT INTO company VALUES (?, ?)";
 		jdbcTemplate.update(addCompany, companyId, companyName);
@@ -31,6 +31,20 @@ public class JdbcCompanyDao implements CompanyDao {
 		company.setName(companyName);
 		
 		return company;
+	}
+	
+	@Override
+	public boolean saveCompany(Company company) {
+		boolean answer = false;
+		
+		String sqlInsertCompany = "INSERT INTO company VALUES (?, ?)";
+		int result = jdbcTemplate.update(sqlInsertCompany, company.getId(), company.getName());
+		
+		if (result > 0) {
+			answer = true;
+		};
+		
+		return answer;
 	}
 	
 	@Override
@@ -56,14 +70,57 @@ public class JdbcCompanyDao implements CompanyDao {
 		
 		return name;
 	}
+	
+	@Override
+	public boolean deleteCompanyById(long companyId) {
+		boolean answer = false;
+		String sqlDeleteCompany = "DELETE FROM shift_roles WHERE company_id = ?; DELETE FROM company WHERE id = ?";
+		int results = jdbcTemplate.update(sqlDeleteCompany, companyId, companyId);
+		
+		if (results > 0) {
+			answer = true;
+		}
+		
+		return answer;
+	}
 
-	private long getCompanyId() {
+	private long getNextCompanyId() {
 		String sqlNextId = "SELECT nextval('company_id_seq')";
 		SqlRowSet nextId = jdbcTemplate.queryForRowSet(sqlNextId);
 
 		nextId.next();
 		return nextId.getLong(1);
 	}
+	
+	
+//	@Override
+//	public boolean createTestCompany() {
+//		boolean answer = false;
+//		
+//		Company company = new Company();
+//		company.setId(99);
+//		company.setName("Test Company");
+//		
+//		String sqlInsertCompany = "INSERT INTO company VALUES (?, ?)";
+//		int result = jdbcTemplate.update(sqlInsertCompany, company.getId(), company.getName());
+//		
+//		if (result > 0) {
+//			answer = true;
+//		};
+//		
+//		return answer;
+//	}
+	
+	@Override
+	public Company createTestCompany() {
+		Company company = new Company();
+		company.setId(99);
+		company.setName("Test Company");
+		
+		return company;
+	}
+	
+	
 
 	
 }

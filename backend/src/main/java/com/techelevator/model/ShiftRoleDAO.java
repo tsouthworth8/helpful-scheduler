@@ -8,6 +8,7 @@ public interface ShiftRoleDAO {
 	
 	public boolean saveShiftRole(ShiftRole role);
 	public List<ShiftRole> getAllShiftRoles(int companyId);
+	public ShiftRole getShiftRoleById(int id);
 	public int getNextShiftRoleId();
 
 }

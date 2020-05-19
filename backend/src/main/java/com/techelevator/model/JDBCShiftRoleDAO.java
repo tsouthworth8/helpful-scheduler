@@ -37,7 +37,7 @@ public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 
 	@Override
 	public List<ShiftRole> getAllShiftRoles(int companyId) {
-		String sqlRetrieveAllShiftRoles = "SELECT id FROM shift_roles WHERE company_id = ?";
+		String sqlRetrieveAllShiftRoles = "SELECT * FROM shift_roles WHERE company_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlRetrieveAllShiftRoles, companyId);
 		
 		List<ShiftRole> shiftRoles = new ArrayList<ShiftRole>();
@@ -49,9 +49,11 @@ public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 		return shiftRoles;	
 	}
 	
+	@Override
 	public ShiftRole getShiftRoleById(int id) {
 		String sqlRetrieveShiftRole = "SELECT * FROM shift_roles WHERE id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlRetrieveShiftRole, id);
+		results.next();
 		
 		return mapRowToShiftRole(results);
 	}
