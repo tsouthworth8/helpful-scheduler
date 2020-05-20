@@ -58,6 +58,19 @@ public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 		return mapRowToShiftRole(results);
 	}
 	
+	@Override
+	public boolean clearAllShiftRoles(int companyId) {
+		boolean answer = false;
+		
+		String sqlDeleteAllShiftRoles = "DELETE * FROM shift_roles WHERE company_id = ?";
+		int results = jdbcTemplate.update(sqlDeleteAllShiftRoles, companyId);
+		
+		if(results > 0) {
+			answer = true;
+		}
+		return answer;
+	}
+	
 	//HELPER METHODS
 	private ShiftRole mapRowToShiftRole(SqlRowSet row) {
 		ShiftRole shiftRole = new ShiftRole();

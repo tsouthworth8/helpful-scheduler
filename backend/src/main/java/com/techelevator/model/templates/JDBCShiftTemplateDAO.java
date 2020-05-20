@@ -19,11 +19,40 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-
 	@Override
-	public boolean saveShiftTemplate(int companyId, ShiftTemplate template) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean saveCompanyShiftTemplate(int companyId, ShiftTemplate template) {
+		boolean answer = false;
+		int nextId = getNextShiftTemplateId();
+		
+		String sqlSaveShiftTemplate = "INSERT INTO shift_templates (id, start_time, end_time) VALUES (?, ?, ?)";
+		int shiftResults = jdbcTemplate.update(sqlSaveShiftTemplate, nextId, template.getStartTime(), template.getEndTime());
+		
+		String sqlSaveTemplateToCompany = "INSERT INTO shift_templates_company (shift_template_id, company_id) VALUES (?, ?)";
+		int companyResults = jdbcTemplate.update(sqlSaveTemplateToCompany, nextId, companyId);
+		
+		if (shiftResults > 0 && companyResults > 0) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+	
+	@Override
+	public boolean saveEmployeeShiftTemplate(int employeeId, ShiftTemplate template) {
+		boolean answer = false;
+		int nextId = getNextShiftTemplateId();
+		
+		String sqlSaveShiftTemplate = "INSERT INTO shift_templates (id, start_time, end_time) VALUES (?, ?, ?)";
+		int shiftResults = jdbcTemplate.update(sqlSaveShiftTemplate, nextId, template.getStartTime(), template.getEndTime());
+		
+		String sqlSaveTemplateToEmployee = "INSERT INTO shift_templates_employee (shift_template_id, employee_id) VALUES (?, ?)";
+		int employeeResults = jdbcTemplate.update(sqlSaveTemplateToEmployee, nextId, employeeId);
+		
+		if (shiftResults > 0 && employeeResults > 0) {
+			answer = true;
+		}
+		
+		return answer;
 	}
 
 	@Override

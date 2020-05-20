@@ -52,6 +52,7 @@ public class JDBCShiftRoleDAOTest {
 	@After
 	public void after() {
 		compDAO.deleteCompanyById(99);
+		srDAO.clearAllShiftRoles(99);
 	}
 	
 	@Test
@@ -74,13 +75,28 @@ public class JDBCShiftRoleDAOTest {
 		Assert.assertEquals(testRole.getTitle(), returnedRole.getTitle());
 	}
 	
+//	@Test
+//	public void get_all_shift_roles_returns_total_num_roles() {
+//		int initialCount = srDAO.getAllShiftRoles(99).size();
+//		
+//		ShiftRole role1 = createNextTestShiftRole();
+//		ShiftRole role2 = createNextTestShiftRole();
+//		ShiftRole role3 = createNextTestShiftRole();
+//		
+//		int count = srDAO.getAllShiftRoles(99).size();
+//		
+//		Assert.assertEquals(initialCount + 3, count);
+//	}
+	
 	//HELPER METHODS
 	public ShiftRole createNextTestShiftRole() {
 		ShiftRole role = new ShiftRole(srDAO.getNextShiftRoleId(), 99, "Shift Supervisor");
+		srDAO.saveShiftRole(role);
 		return role;
 	}
 	public ShiftRole createTestShiftRole() {
 		ShiftRole role = new ShiftRole(420, 99, "Captain Dipstick");
+		srDAO.saveShiftRole(role);
 		return role;
 	}
 
