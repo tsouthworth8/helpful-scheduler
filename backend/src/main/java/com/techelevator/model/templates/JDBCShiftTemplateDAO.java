@@ -1,6 +1,7 @@
 package com.techelevator.model.templates;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -56,13 +57,35 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 
 	@Override
-	public List<Template> getAllShiftTemplates(int companyId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ShiftTemplate> getAllShiftTemplates(int companyId) {
+		String sqlGetTemplateIds = "SELECT shift_template_id FROM shift_templates_company WHERE company_id = ?";
+		SqlRowSet idsResult = jdbcTemplate.queryForRowSet(sqlGetTemplateIds, companyId);
+		
+		List<Integer> idList = new ArrayList<Integer>();
+		while(idsResult.next()) {
+			idList.add(idsResult.getInt("shift_template_id"));
+		}
+		
+		List<ShiftTemplate> templateList = new ArrayList<ShiftTemplate>();
+		String sqlGetCompanyTemplates = "SELECT * FROM shift_templates WHERE id = ?";
+		for(Integer id : idList) {
+			SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetCompanyTemplates, id);
+			templateList.add(mapRowToShiftTemplate(result));
+		}
+		
+		return templateList;
 	}
 	
 	
 	//HELPER METHODS
+	private ShiftTemplate mapRowToShiftTemplate(SqlRowSet result) {
+		ShiftTemplate template = new ShiftTemplate();
+		template.setId(result.getInt("id"));
+		template.setStartTime(result.getTime("start_time").toLocalTime());
+		template.setStartTime(result.getTime("start_time").toLocalTime());
+		return template;
+	}
+	
 	private ShiftTemplate createTestShiftTemplate() {
 		ShiftTemplate template = new ShiftTemplate();
 		

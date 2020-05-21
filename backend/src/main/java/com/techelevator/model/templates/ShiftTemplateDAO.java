@@ -6,6 +6,6 @@ public interface ShiftTemplateDAO {
 	
 	public boolean saveCompanyShiftTemplate(int companyId, ShiftTemplate template);
 	public boolean saveEmployeeShiftTemplate(int employeeId, ShiftTemplate template);
-	public List<Template> getAllShiftTemplates(int companyId);
+	public List<ShiftTemplate> getAllShiftTemplates(int companyId);
 
 }
