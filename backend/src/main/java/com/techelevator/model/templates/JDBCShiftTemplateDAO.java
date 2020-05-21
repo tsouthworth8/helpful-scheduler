@@ -1,6 +1,7 @@
 package com.techelevator.model.templates;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,21 +20,72 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
-
 	@Override
-	public boolean saveShiftTemplate(int companyId, ShiftTemplate template) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean saveCompanyShiftTemplate(int companyId, ShiftTemplate template) {
+		boolean answer = false;
+		int nextId = getNextShiftTemplateId();
+		
+		String sqlSaveShiftTemplate = "INSERT INTO shift_templates (id, start_time, end_time) VALUES (?, ?, ?)";
+		int shiftResults = jdbcTemplate.update(sqlSaveShiftTemplate, nextId, template.getStartTime(), template.getEndTime());
+		
+		String sqlSaveTemplateToCompany = "INSERT INTO shift_templates_company (shift_template_id, company_id) VALUES (?, ?)";
+		int companyResults = jdbcTemplate.update(sqlSaveTemplateToCompany, nextId, companyId);
+		
+		if (shiftResults > 0 && companyResults > 0) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+	
+	@Override
+	public boolean saveEmployeeShiftTemplate(int employeeId, ShiftTemplate template) {
+		boolean answer = false;
+		int nextId = getNextShiftTemplateId();
+		
+		String sqlSaveShiftTemplate = "INSERT INTO shift_templates (id, start_time, end_time) VALUES (?, ?, ?)";
+		int shiftResults = jdbcTemplate.update(sqlSaveShiftTemplate, nextId, template.getStartTime(), template.getEndTime());
+		
+		String sqlSaveTemplateToEmployee = "INSERT INTO shift_templates_employee (shift_template_id, employee_id) VALUES (?, ?)";
+		int employeeResults = jdbcTemplate.update(sqlSaveTemplateToEmployee, nextId, employeeId);
+		
+		if (shiftResults > 0 && employeeResults > 0) {
+			answer = true;
+		}
+		
+		return answer;
 	}
 
 	@Override
-	public List<Template> getAllShiftTemplates(int companyId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ShiftTemplate> getAllShiftTemplates(int companyId) {
+		String sqlGetTemplateIds = "SELECT shift_template_id FROM shift_templates_company WHERE company_id = ?";
+		SqlRowSet idsResult = jdbcTemplate.queryForRowSet(sqlGetTemplateIds, companyId);
+		
+		List<Integer> idList = new ArrayList<Integer>();
+		while(idsResult.next()) {
+			idList.add(idsResult.getInt("shift_template_id"));
+		}
+		
+		List<ShiftTemplate> templateList = new ArrayList<ShiftTemplate>();
+		String sqlGetCompanyTemplates = "SELECT * FROM shift_templates WHERE id = ?";
+		for(Integer id : idList) {
+			SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetCompanyTemplates, id);
+			templateList.add(mapRowToShiftTemplate(result));
+		}
+		
+		return templateList;
 	}
 	
 	
 	//HELPER METHODS
+	private ShiftTemplate mapRowToShiftTemplate(SqlRowSet result) {
+		ShiftTemplate template = new ShiftTemplate();
+		template.setId(result.getInt("id"));
+		template.setStartTime(result.getTime("start_time").toLocalTime());
+		template.setStartTime(result.getTime("start_time").toLocalTime());
+		return template;
+	}
+	
 	private ShiftTemplate createTestShiftTemplate() {
 		ShiftTemplate template = new ShiftTemplate();
 		

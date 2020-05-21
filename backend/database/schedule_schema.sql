@@ -1,12 +1,14 @@
 
 BEGIN;
 
-DROP TABLE IF EXISTS day_week;
+DROP TABLE IF EXISTS day_week_templates;
 DROP TABLE IF EXISTS week_templates;
-DROP TABLE IF EXISTS shift_day;
+DROP TABLE IF EXISTS shift_day_templates;
 DROP TABLE IF EXISTS day_templates;
 DROP TABLE IF EXISTS roles_templates;
 DROP TABLE IF EXISTS shift_templates;
+DROP TABLE IF EXISTS shift_templates_company;
+DROP TABLE IF EXISTS shift_templates_employee;
 DROP TABLE IF EXISTS shift_roles;
 DROP TABLE IF EXISTS employee_requests;
 DROP TABLE IF EXISTS time_off;
@@ -70,11 +72,26 @@ CREATE TABLE shift_roles (
 --TEMPLATE TABLES:
 CREATE TABLE shift_templates (
         id serial PRIMARY KEY,
-        company_id int NOT NULL,
         start_time time NOT NULL,
-        end_time time NOT NULL,
+        end_time time NOT NULL
+);
 
-        CONSTRAINT fk_shift_templates_company FOREIGN KEY (company_id) REFERENCES company(id)
+CREATE TABLE shift_templates_company (
+        shift_template_id int NOT NULL,
+        company_id int NOT NULL,
+
+        CONSTRAINT pk_shift_templates_company PRIMARY KEY (shift_template_id, company_id),
+        CONSTRAINT fk_shift_templates_company_templates FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id),
+        CONSTRAINT fk_shift_templates_company_company FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE shift_templates_employee (
+        shift_template_id int NOT NULL,
+        employee_id int NOT NULL,
+
+        CONSTRAINT pk_shift_templates_employee PRIMARY KEY (shift_template_id, employee_id),
+        CONSTRAINT fk_shift_templates_employee_templates FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id),
+        CONSTRAINT fk_shift_templates_employee_employee FOREIGN KEY (employee_id) REFERENCES employee(id)
 );
 
 CREATE TABLE roles_templates (
@@ -91,7 +108,7 @@ CREATE TABLE day_templates (
         nickname varchar(250) NOT NULL
 );
 
-CREATE TABLE shift_day (
+CREATE TABLE shift_day_templates (
         shift_id int NOT NULL,
         day_id int NOT NULL,
 
@@ -105,7 +122,7 @@ CREATE TABLE week_templates (
         nickname varchar(250) NOT NULL
 );
 
-CREATE TABLE day_week (
+CREATE TABLE day_week_templates (
         day_id int NOT NULL,
         week_id int NOT NULL,
 

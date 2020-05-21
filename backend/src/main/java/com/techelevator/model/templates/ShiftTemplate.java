@@ -19,6 +19,12 @@ public class ShiftTemplate implements Template {
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	
+	public ShiftTemplate(int id, LocalTime startTime, LocalTime endTime) {
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+	
 	public ShiftTemplate(LocalTime startTime, LocalTime endTime, List<Integer> allowedShiftRoles) {
 		this.startTime = startTime;
 		this.endTime = endTime;
