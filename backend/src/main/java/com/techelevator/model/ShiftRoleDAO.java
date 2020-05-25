@@ -6,7 +6,7 @@ import com.techelevator.pojo.ShiftRole;
 
 public interface ShiftRoleDAO {
 	
-	public boolean saveShiftRole(ShiftRole role);
+	public boolean saveShiftRole(long companyId, String title);
 	public List<ShiftRole> getAllShiftRoles(int companyId);
 	public int getNextShiftRoleId();
 

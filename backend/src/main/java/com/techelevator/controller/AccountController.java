@@ -22,6 +22,7 @@ import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.authentication.UserCreationException;
 import com.techelevator.model.CompanyDao;
 import com.techelevator.model.UserDao;
+import com.techelevator.pojo.PasswordUpdate;
 import com.techelevator.pojo.User;
 
 /**
@@ -96,9 +97,19 @@ public class AccountController {
 
 			// sends the e-mail
 			mailSender.send(email);
+			return "Email sent.";
+		} else {
+			return "User not found.";
 		}
-
-		return emailAddress;
+	}
+	
+	@RequestMapping(path = "/change-password", method = RequestMethod.POST)
+	public boolean changePassword(@RequestBody PasswordUpdate passwords) {
+		
+		String oldPassword = passwords.getOldPassword();
+		String newPassword = passwords.getNewPassword();
+		
+		return auth.changePassword(oldPassword, newPassword);
 	}
 
 }

@@ -29,7 +29,6 @@
 						<!-- Every url in the app must be authenticated except /login -->
 						<value>/login</value>
 						<value>/register</value>
-						<value>/forgot-password</value>
 					</list>
 				</property>
 			</bean>

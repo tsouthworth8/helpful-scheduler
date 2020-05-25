@@ -46,6 +46,18 @@ public class RequestAuthProvider implements AuthProvider {
             return false;
         }
     }
+    
+    @Override
+    public boolean isCurrentUserPasswordCorrect(String password) {
+        User currentUser = (User) request.getAttribute(USER_KEY);
+        String username = currentUser.getUsername();
+        User authenticatedUser = dao.getValidUserWithPassword(username, password);
+        if (authenticatedUser != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public void logOff() {
