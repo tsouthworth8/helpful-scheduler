@@ -30,7 +30,6 @@
 						<value>/login</value>
 						<value>/register</value>
 						<value>/forgot-password</value>
-						<value>/logout</value>
 					</list>
 				</property>
 			</bean>

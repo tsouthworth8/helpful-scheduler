@@ -7,6 +7,7 @@ import Register from './views/Register.vue'
 import ForgotPassword from './views/ForgotPassword.vue'
 import ChangePassword from './views/ChangePassword.vue'
 import Schedule from './views/Schedule.vue'
+import CompanyTemplates from './views/CompanyTemplates.vue'
 
 Vue.use(Router)
 
@@ -67,6 +68,14 @@ const router = new Router({
       path: "/schedule",
       name: "schedule",
       component: Schedule,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/templates",
+      name: "company-templates",
+      component: CompanyTemplates,
       meta: {
         requiresAuth: false
       }
