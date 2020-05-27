@@ -3,11 +3,9 @@ package com.techelevator.model.templates;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.techelevator.pojo.ShiftRole;
-
 public class ShiftTemplate implements Template {
 	
-	private int id;
+	private long id;
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private List<Integer> allowedShiftRoles;
@@ -31,11 +29,17 @@ public class ShiftTemplate implements Template {
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	
+	public ShiftTemplate(String startTime, String endTime, List<Integer> allowedShiftRoles) {
+		this.startTime = LocalTime.parse(startTime);
+		this.endTime = LocalTime.parse(endTime);
+		this.allowedShiftRoles = allowedShiftRoles;
+	}
+	
 	public ShiftTemplate() {
 	}
 	
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {

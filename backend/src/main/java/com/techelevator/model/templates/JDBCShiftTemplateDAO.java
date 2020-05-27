@@ -21,7 +21,7 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 	
 	@Override
-	public boolean saveCompanyShiftTemplate(int companyId, ShiftTemplate template) {
+	public boolean saveCompanyShiftTemplate(long companyId, ShiftTemplate template) {
 		boolean answer = false;
 		int nextId = getNextShiftTemplateId();
 		
@@ -39,7 +39,7 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 	
 	@Override
-	public boolean saveEmployeeShiftTemplate(int employeeId, ShiftTemplate template) {
+	public boolean saveEmployeeShiftTemplate(long employeeId, ShiftTemplate template) {
 		boolean answer = false;
 		int nextId = getNextShiftTemplateId();
 		
@@ -57,7 +57,7 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 
 	@Override
-	public List<ShiftTemplate> getAllShiftTemplates(int companyId) {
+	public List<ShiftTemplate> getAllShiftTemplates(long companyId) {
 		String sqlGetTemplateIds = "SELECT shift_template_id FROM shift_templates_company WHERE company_id = ?";
 		SqlRowSet idsResult = jdbcTemplate.queryForRowSet(sqlGetTemplateIds, companyId);
 		
