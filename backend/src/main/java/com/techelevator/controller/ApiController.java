@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techelevator.authentication.AuthProvider;
 import com.techelevator.authentication.UnauthorizedException;
 import com.techelevator.model.CompanyDao;
+import com.techelevator.model.ShiftRoleDAO;
 import com.techelevator.model.UserDao;
+import com.techelevator.pojo.ShiftRole;
+import com.techelevator.pojo.User;
 
 /**
  * ApiController
@@ -36,6 +40,11 @@ public class ApiController {
     
     @Autowired
     private UserDao user;
+    
+    @Autowired
+    private ShiftRoleDAO shift;
+    
+    
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String authorizedOnly() throws UnauthorizedException {
@@ -71,5 +80,17 @@ public class ApiController {
     	mailSender.send(newEmail);
     	
     	return email;
+    }
+    
+    @RequestMapping(path = "/roles", method = RequestMethod.POST)
+    public List<ShiftRole> shiftRoles (@RequestBody List<ShiftRole> roles){
+    	List<ShiftRole> newList;
+    	long companyId = user.getCompanyIdByUserId(auth.getCurrentUser().getId());
+    	
+    	for(ShiftRole role : roles) {
+    		shift.saveShiftRole(companyId, role.getTitle());
+    		
+    	}
+    	return null;
     }
 }

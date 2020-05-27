@@ -22,11 +22,12 @@ public class JDBCShiftRoleDAO implements ShiftRoleDAO {
 	}
 
 	@Override
-	public boolean saveShiftRole(ShiftRole role) {
+	public boolean saveShiftRole(long companyId, String title) {
 		boolean saved = false;
 		
 		String sqlInsertShiftRole = "INSERT INTO shift_roles (id, company_id, title) VALUES (?, ?, ?)";
-		int result = jdbcTemplate.update(sqlInsertShiftRole, role.getId(), role.getCompanyId(), role.getTitle());
+		int nextId = getNextShiftRoleId();
+		int result = jdbcTemplate.update(sqlInsertShiftRole, nextId, companyId, title);
 		
 		if (result > 0) {
 			saved = true;
