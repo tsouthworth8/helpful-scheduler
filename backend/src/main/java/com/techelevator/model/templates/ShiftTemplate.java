@@ -29,11 +29,11 @@ public class ShiftTemplate implements Template {
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	
-	public ShiftTemplate(String startTime, String endTime, List<Integer> allowedShiftRoles) {
-		this.startTime = LocalTime.parse(startTime);
-		this.endTime = LocalTime.parse(endTime);
-		this.allowedShiftRoles = allowedShiftRoles;
-	}
+//	public ShiftTemplate(String startTime, String endTime, List<Integer> allowedShiftRoles) {
+//		this.startTime = LocalTime.parse(startTime);
+//		this.endTime = LocalTime.parse(endTime);
+//		this.allowedShiftRoles = allowedShiftRoles;
+//	}
 	
 	public ShiftTemplate() {
 	}

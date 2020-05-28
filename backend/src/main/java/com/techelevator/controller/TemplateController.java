@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techelevator.authentication.AuthProvider;
 import com.techelevator.model.templates.ShiftTemplate;
 import com.techelevator.model.templates.ShiftTemplateDAO;
-import com.techelevator.pojo.ShiftRole;
+import com.techelevator.model.templates.StringShiftTemplate;
 
 @CrossOrigin
 @RestController
@@ -31,7 +31,7 @@ public class TemplateController {
 	}
 	
 	@RequestMapping(path = "/new", method = RequestMethod.POST)
-	public String newShiftTemplate(@RequestBody ShiftTemplate template) {
+	public String newShiftTemplate(@RequestBody StringShiftTemplate template) {
 		System.out.println("Controller reached");
 		return "Haaayyy";
 	}

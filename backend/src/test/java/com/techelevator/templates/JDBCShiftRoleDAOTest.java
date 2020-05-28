@@ -38,66 +38,53 @@ public class JDBCShiftRoleDAOTest {
 		dataSource.setAutoCommit(false);
 	}
 	
-	@Before
-	public void before() {
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		srDAO = new JDBCShiftRoleDAO(dataSource);
-		compDAO = new JdbcCompanyDao(dataSource);
-		
-		Company company = compDAO.createTestCompany();
-		String sqlInsertCompany = "INSERT INTO company VALUES (?, ?)";
-		int result = jdbcTemplate.update(sqlInsertCompany, company.getId(), company.getName());
-	}
-	
-	@After
-	public void after() {
-		compDAO.deleteCompanyById(99);
-		srDAO.clearAllShiftRoles(99);
-	}
-	
-	@Test
-	public void insert_new_shift_role_returns_additional_shift_role() {
-		int initial = srDAO.getAllShiftRoles(99).size();
-		
-		ShiftRole testRole = createNextTestShiftRole();
-		srDAO.saveShiftRole(testRole);
-		List<ShiftRole> list = srDAO.getAllShiftRoles(99);
-		
-		Assert.assertEquals(initial + 1, list.size());	
-	}
-	
-	@Test
-	public void get_shift_role_by_id_returns_correct_role() {
-		ShiftRole testRole = createTestShiftRole();
-		srDAO.saveShiftRole(testRole);
-		
-		ShiftRole returnedRole = srDAO.getShiftRoleById(420);
-		Assert.assertEquals(testRole.getTitle(), returnedRole.getTitle());
-	}
-	
-//	@Test
-//	public void get_all_shift_roles_returns_total_num_roles() {
-//		int initialCount = srDAO.getAllShiftRoles(99).size();
+//	@Before
+//	public void before() {
+//		jdbcTemplate = new JdbcTemplate(dataSource);
+//		srDAO = new JDBCShiftRoleDAO(dataSource);
+//		compDAO = new JdbcCompanyDao(dataSource);
 //		
-//		ShiftRole role1 = createNextTestShiftRole();
-//		ShiftRole role2 = createNextTestShiftRole();
-//		ShiftRole role3 = createNextTestShiftRole();
-//		
-//		int count = srDAO.getAllShiftRoles(99).size();
-//		
-//		Assert.assertEquals(initialCount + 3, count);
+//		Company company = compDAO.createTestCompany();
+//		String sqlInsertCompany = "INSERT INTO company VALUES (?, ?)";
+//		int result = jdbcTemplate.update(sqlInsertCompany, company.getId(), company.getName());
 //	}
-	
-	//HELPER METHODS
-	public ShiftRole createNextTestShiftRole() {
-		ShiftRole role = new ShiftRole(srDAO.getNextShiftRoleId(), 99, "Shift Supervisor");
-		srDAO.saveShiftRole(role);
-		return role;
-	}
-	public ShiftRole createTestShiftRole() {
-		ShiftRole role = new ShiftRole(420, 99, "Captain Dipstick");
-		srDAO.saveShiftRole(role);
-		return role;
-	}
+//	
+//	@After
+//	public void after() {
+//		compDAO.deleteCompanyById(99);
+//		srDAO.clearAllShiftRoles(99);
+//	}
+//	
+//	@Test
+//	public void insert_new_shift_role_returns_additional_shift_role() {
+//		int initial = srDAO.getAllShiftRoles(99).size();
+//		
+//		ShiftRole testRole = createNextTestShiftRole();
+//		srDAO.saveShiftRole(testRole);
+//		List<ShiftRole> list = srDAO.getAllShiftRoles(99);
+//		
+//		Assert.assertEquals(initial + 1, list.size());	
+//	}
+//	
+//	@Test
+//	public void get_shift_role_by_id_returns_correct_role() {
+//		ShiftRole testRole = createTestShiftRole();
+//		srDAO.saveShiftRole(testRole);
+//		
+//		ShiftRole returnedRole = srDAO.getShiftRoleById(420);
+//		Assert.assertEquals(testRole.getTitle(), returnedRole.getTitle());
+//	}
+//	
+//	//HELPER METHODS
+//	public ShiftRole createNextTestShiftRole() {
+//		ShiftRole role = new ShiftRole(srDAO.getNextShiftRoleId(), 99, "Shift Supervisor");
+//		srDAO.saveShiftRole(role);
+//		return role;
+//	}
+//	public ShiftRole createTestShiftRole() {
+//		ShiftRole role = new ShiftRole(420, 99, "Captain Dipstick");
+//		srDAO.saveShiftRole(role);
+//		return role;
+//	}
 
 }
