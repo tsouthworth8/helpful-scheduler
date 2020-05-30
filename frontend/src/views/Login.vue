@@ -54,7 +54,7 @@
       </div>
 
       <div class="control">
-        <router-link :to="{ name: 'forgot-password' }">Forget your damn password?</router-link>
+        <router-link :to="{ name: 'forgot-password' }">Forgot your password?</router-link>
       </div>
     </form>
   </div>
