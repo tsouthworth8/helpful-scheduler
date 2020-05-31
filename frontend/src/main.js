@@ -7,12 +7,14 @@ import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faBuilding } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faUser)
 library.add(faEnvelope)
 library.add(faLock)
 library.add(faCheck)
+library.add(faBuilding)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

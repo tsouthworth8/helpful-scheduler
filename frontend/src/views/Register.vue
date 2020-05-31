@@ -80,16 +80,25 @@
       </div>
 
       <div v-if="userRegister">
-        <input
-          type="companyName"
-          id="companyName"
-          class="form-control"
-          placeholder="Company Name"
-          v-model="user.companyName"
-          required
-        />
+        <div class="field">
+          <div class="control has-icons-left">
+            <input
+              type="companyName"
+              id="companyName"
+              class="form-control input is-small"
+              placeholder="Company Name"
+              v-model="user.companyName"
+              required
+            />
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="building" />
+            </span>
+          </div>
+        </div>
 
-        <button class="button is-small" type="submit">Create Account</button>
+        <div class="control">
+          <button class="button is-small" type="submit">Create Account</button>
+        </div>
       </div>
     </form>
 
