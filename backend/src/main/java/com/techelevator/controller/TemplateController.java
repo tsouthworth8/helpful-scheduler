@@ -1,6 +1,7 @@
 package com.techelevator.controller;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.authentication.AuthProvider;
+import com.techelevator.model.ShiftRoleDAO;
 import com.techelevator.model.UserDao;
 import com.techelevator.model.templates.ShiftTemplate;
 import com.techelevator.model.templates.ShiftTemplateDAO;
 import com.techelevator.model.templates.StringShiftTemplate;
+import com.techelevator.pojo.ShiftRole;
 
 @CrossOrigin
 @RestController
@@ -27,10 +30,12 @@ public class TemplateController {
 	private ShiftTemplateDAO tempDAO;
 	@Autowired
 	private UserDao userDAO;
+	@Autowired
+	private ShiftRoleDAO srDAO;
 	
 	@RequestMapping(path = "/getAll", method = RequestMethod.GET)
 	public List<ShiftTemplate> getAllShiftTemplates() {
-		long companyId = auth.getCurrentUser().getCompanyId();
+		long companyId = userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId());
 		return tempDAO.getAllShiftTemplates(companyId);
 	}
 	
@@ -46,7 +51,12 @@ public class TemplateController {
 		int endMinute = Integer.parseInt(template.getEndTime().split(":")[1]);
 		LocalTime endTime = LocalTime.of(endHour, endMinute, 0, 0);
 		
-		ShiftTemplate finalTemplate = new ShiftTemplate(startTime, endTime, template.getAllowedShiftRoles());
+		List<ShiftRole> roleList = new ArrayList<ShiftRole>();
+		for(Integer id : template.getAllowedShiftRoles()) {
+			roleList.add(srDAO.getShiftRoleById(id));
+		}
+		
+		ShiftTemplate finalTemplate = new ShiftTemplate(startTime, endTime, roleList);
 		tempDAO.saveCompanyShiftTemplate(userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId()), finalTemplate);
 		
 		System.out.println("Controller reached");

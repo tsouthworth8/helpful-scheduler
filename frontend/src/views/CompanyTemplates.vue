@@ -25,8 +25,8 @@
                 <option value="45">-:45</option>
             </select>
             <select id="start-am" v-model="userInput.startAM">
-                <option value=true>AM</option>
-                <option value=flase>PM</option>
+                <option :value="true">AM</option>
+                <option :value="false">PM</option>
             </select>
             <br>
 
@@ -52,12 +52,12 @@
                 <option value="45">-:45</option>
             </select>
             <select id="start-am" v-model="userInput.endAM">
-                <option value=true>AM</option>
-                <option value=flase>PM</option>
+                <option :value="true">AM</option>
+                <option :value="false">PM</option>
             </select>
             <br>
 
-            <div id="roles-list" v-for="role in shiftRoles" :key="role.id">
+            <div id="roles-list" v-for="role in shiftRoles.data" :key="role.id">
                 <input type="checkbox" id="key" :value="role.id" v-model="shiftTemplate.allowedShiftRoles" /> {{role.title}}
             </div>
 
@@ -65,7 +65,17 @@
         </form>
 
         <h3>Template list:</h3>
-        <p>{{templateList}}</p>
+        <table id="template-table">
+            <th>Start time</th>
+            <th>End time</th>
+            <th>Allowed Shift Roles</th>
+            <tr v-for="template in templateList" :key="template.id">
+                <td>{{template.startTime.hour + ":" + template.startTime.minute}}</td>
+                <td>{{template.endTime.hour + ":" + template.endTime.minute}}</td>
+                <td><p v-for="role in template.allowedShiftRoles" :key="role.id">{{role.title}}</p></td>
+            </tr>
+        </table>
+
     </div>
 </template>
 
@@ -77,23 +87,7 @@ export default {
     name: 'company-templates',
     data() {
         return {
-            shiftRoles: [
-                {
-                    id: 1,
-                    companyId: 1,
-                    title: 'Shift Supervisor'
-                },
-                {
-                    id: 2,
-                    companyId: 1,
-                    title: 'Bartender'
-                },
-                {
-                    id: 3,
-                    companyId: 1,
-                    title: 'Hostess'
-                }
-            ],
+            shiftRoles: [],
             userInput: {
                 startHour: 0,
                 startMinute: 0,
@@ -112,6 +106,18 @@ export default {
     },
     methods: {
         getShiftRoles() {
+            axios.get(`${process.env.VUE_APP_REMOTE_API}/api/getRoles`, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("Authorization")
+                }
+            })
+            .then(response => {
+                console.log("Role response");
+                this.shiftRoles = response;
+            })
+            .catch(err => {
+                console.log(err);
+            })
         },
         getTemplates() {
             axios.get(`${process.env.VUE_APP_REMOTE_API}/templates/getAll`, {
@@ -120,7 +126,8 @@ export default {
                 }
             })
             .then(response => {
-                console.log("Response reached");
+                console.log("Templates response reached");
+                console.log(response)
                 this.templateList = response.data;
             })
             .catch(err => {
@@ -128,24 +135,22 @@ export default {
             })
         },
         convertInput() {
-            // if(this.userInput.startAM) {
-            //     let startTime = new Date(1970, 0, 1, this.userInput.startHour, this.userInput.startMinute, 0, 0);
-            //     this.shiftTemplate.startTime = startTime;
-            // } else {
-            //     let startTime = new Date(1970, 0, 1, this.userInput.startHour + 12, this.userInput.startMinute, 0, 0);
-            //     this.shiftTemplate.startTime = startTime;
-            // }
+            if(this.userInput.startAM) {
+                this.shiftTemplate.startTime = this.userInput.startHour + ":" + this.userInput.startMinute;
+            } else {
+                let hour = parseInt(this.userInput.startHour) + 12;
+                this.shiftTemplate.startTime = hour + ":" + this.userInput.startMinute;
+            }
 
-            // if(this.userInput.endAM) {
-            //     let endTime = new Date(1970, 0, 1, this.userInput.endHour, this.userInput.endMinute, 0, 0);
-            //     this.shiftTemplate.endTime = endTime;
-            // } else {
-            //     let endTime = new Date(1970, 0, 1, this.userInput.endHour + 12, this.userInput.endMinute, 0, 0);
-            //     this.shiftTemplate.endTime = endTime;
-            // }
+            if(this.userInput.endAM) {
+                this.shiftTemplate.endTime = this.userInput.endHour + ":" + this.userInput.endMinute;
+            } else {
+                let hour = parseInt(this.userInput.endHour) + 12;
+                this.shiftTemplate.endTime = hour + ":" + this.userInput.endMinute;
+            }
 
-            this.shiftTemplate.startTime = this.userInput.startHour + ":" + this.userInput.startMinute;
-            this.shiftTemplate.endTime = this.userInput.endHour + ":" + this.userInput.endMinute;
+            // this.shiftTemplate.startTime = this.userInput.startHour + ":" + this.userInput.startMinute;
+            // this.shiftTemplate.endTime = this.userInput.endHour + ":" + this.userInput.endMinute;
         },
         submitTemplate() {
             this.convertInput();
@@ -166,6 +171,7 @@ export default {
     },
     mounted() {
         this.getTemplates();
+        this.getShiftRoles();
     }
 }
 </script>
