@@ -2,9 +2,9 @@
   <div>
     <h1>Employee Roles</h1>
     <div> Current Company Roles </div>
-    <div v-for="role in currentRoles" v-bind:key="role.id">{{role.title}}</div>  
+    <div v-for="role in currentRoles" v-bind:key="role.id">{{role.title}}</div> 
     <div class="form-group" v-for="(role,k) in roles" :key="k">
-      <input type="text" class="form-control" v-model="role.title" placeholder="Company Role"/>
+      <input type="text" class="form-control" v-model.trim="role.title" placeholder="Company Role" required/>
       <button @click="add(k)" v-show="k == roles.length-1">Add</button>
       <button @click="remove(k)" v-show="k || ( !k && roles.length > 1)">Remove</button>
     </div>
