@@ -93,4 +93,14 @@ public class ApiController {
     	}
     	return null;
     }
+    
+    @RequestMapping(path = "/getRoles", method = RequestMethod.GET)
+    public List<ShiftRole> getCompanyRoles(){
+    	long companyId = user.getCompanyIdByUserId(auth.getCurrentUser().getId());
+    	List<ShiftRole> roles = shift.getAllShiftRoles(companyId);
+    	
+    	return roles;
+    			
+    }
+    
 }
