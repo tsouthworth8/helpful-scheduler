@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techelevator.authentication.AuthProvider;
 import com.techelevator.model.ShiftRoleDAO;
 import com.techelevator.model.UserDao;
+import com.techelevator.model.templates.DayTemplate;
 import com.techelevator.model.templates.ShiftTemplate;
 import com.techelevator.model.templates.ShiftTemplateDAO;
 import com.techelevator.model.templates.StringShiftTemplate;
@@ -59,8 +60,29 @@ public class TemplateController {
 		ShiftTemplate finalTemplate = new ShiftTemplate(startTime, endTime, roleList);
 		tempDAO.saveCompanyShiftTemplate(userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId()), finalTemplate);
 		
-		System.out.println("Controller reached");
 		return "Haaayyy";
+	}
+	
+	@RequestMapping(path = "/newDay", method = RequestMethod.POST)
+	public boolean newDayTemplate(DayTemplate dayTemplate) {
+		boolean response = false;
+		
+		String sqlSaveNewDayTemplate = "INSERT INTO day_templates (id, nickname) VALUES ?, ?";
+		//int dayTempResult = jdbcTemplate.update(sqlSaveNewDayTemplate, dayTemplate)
+		
+		return response;
+	}
+	
+	@RequestMapping(path = "/delete", method = RequestMethod.POST)
+	public boolean deleteShiftTemplates(@RequestBody List<Integer> templateList) {
+		boolean answer = false;
+		long companyId = userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId());
+		
+		for(Integer templateId : templateList) {
+			tempDAO.deleteCompanyShiftTemplate(templateId, companyId);
+		}
+		
+		return answer;
 	}
 
 }

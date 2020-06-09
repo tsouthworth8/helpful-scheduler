@@ -2,6 +2,8 @@
     <div id="app">
         <h1>This is the place where companies (managers) create templates, bro.</h1>
 
+        <div class="box">
+        <h3>Create a shift template</h3>
         <form id="shift-temp-form">
             <label for="start-hour">Start time:</label>
             <select id="start-hour" v-model="userInput.startHour">
@@ -57,24 +59,45 @@
             </select>
             <br>
 
+            <label for="roles-list">Allowed Shift Roles:</label>
             <div id="roles-list" v-for="role in shiftRoles.data" :key="role.id">
                 <input type="checkbox" id="key" :value="role.id" v-model="shiftTemplate.allowedShiftRoles" /> {{role.title}}
             </div>
 
             <button id="submit-role-btn" @click.prevent="submitTemplate">Submit</button>
         </form>
+        </div>
 
-        <h3>Template list:</h3>
+        <div class="box">
+        <h3>Shift templates</h3>
         <table id="template-table">
+            <th></th>
             <th>Start time</th>
             <th>End time</th>
             <th>Allowed Shift Roles</th>
             <tr v-for="template in templateList" :key="template.id">
+                <td>
+                    <label>
+    					<input type="checkbox" :value="template.id" v-model="selectedTemplates">
+  					</label>
+                </td>
                 <td>{{template.startTime.hour + ":" + template.startTime.minute}}</td>
                 <td>{{template.endTime.hour + ":" + template.endTime.minute}}</td>
                 <td><p v-for="role in template.allowedShiftRoles" :key="role.id">{{role.title}}</p></td>
             </tr>
         </table>
+
+        <button @click.prevent="deleteShiftTemplates()">Delete Selected</button>
+        </div>
+
+        <div class="box">
+        <h3>Day templates</h3>
+        
+
+        <button @click.prevent="deleteTemplates()">Delete Selected</button>
+        </div>
+
+        <p>{{selectedTemplates}}</p>
 
     </div>
 </template>
@@ -101,7 +124,8 @@ export default {
                 endTime: '',
                 allowedShiftRoles: []
             },
-            templateList: []
+            templateList: [],
+            selectedTemplates: []
         }
     },
     methods: {
@@ -128,6 +152,14 @@ export default {
             .then(response => {
                 console.log("Templates response reached");
                 console.log(response)
+                response.data.forEach(element => {
+                    if(element.endTime.minute == 0) {
+                        element.endTime.minute = '00';
+                    }
+                    if(element.startTime.minute == 0) {
+                        element.startTime.minute = '00';
+                    }
+                })
                 this.templateList = response.data;
             })
             .catch(err => {
@@ -163,6 +195,23 @@ export default {
             })
             .then(response => {
                 console.log(response);
+                this.getTemplates();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        deleteShiftTemplates() {
+            console.log("Delete templates method reached.")
+            axios.post(`${process.env.VUE_APP_REMOTE_API}/templates/delete`, this.selectedTemplates, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("Authorization")
+                }
+            })
+            .then(response => {
+                console.log(response);
+                this.getTemplates();
+                this.selectedTemplates = [];
             })
             .catch(err => {
                 console.log(err);
@@ -178,4 +227,8 @@ export default {
 
 
 <style>
+h3 {
+    font-weight: bold;
+    text-align: center;
+}
 </style>

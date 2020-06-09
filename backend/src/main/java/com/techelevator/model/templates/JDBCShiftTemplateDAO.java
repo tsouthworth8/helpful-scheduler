@@ -49,6 +49,25 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 		return answer;
 	}
 	
+	public boolean deleteCompanyShiftTemplate(long templateId, long companyId) {
+		boolean answer = false;
+		
+		String sqlDeleteRoleJoin = "DELETE FROM roles_templates WHERE shift_template_id = ?";
+		int roleResult = jdbcTemplate.update(sqlDeleteRoleJoin, templateId);
+		
+		String sqlDeleteCompanyJoin = "DELETE FROM shift_templates_company WHERE shift_template_id = ? AND company_id = ?";
+		int companyResult = jdbcTemplate.update(sqlDeleteCompanyJoin, templateId, companyId);
+		
+		String sqlDeleteShiftTemplate = "DELETE FROM shift_templates WHERE id = ?";
+		int templateResult = jdbcTemplate.update(sqlDeleteShiftTemplate, templateId);
+		
+		if (templateResult > 0 && companyResult > 0 && roleResult > 0) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+	
 	@Override
 	public boolean saveEmployeeShiftTemplate(long employeeId, ShiftTemplate template) {
 		boolean answer = false;
