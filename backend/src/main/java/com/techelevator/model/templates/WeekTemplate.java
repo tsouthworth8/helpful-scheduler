@@ -6,7 +6,7 @@ public class WeekTemplate implements Template {
 	
 	private int id;
 	private String nickname;
-	private List<DayTemplate> days;
+	private List<Integer> dayIds;
 	
 	
 	public int getId() {
@@ -21,12 +21,13 @@ public class WeekTemplate implements Template {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public List<DayTemplate> getDays() {
-		return days;
+	public List<Integer> getDayIds() {
+		return dayIds;
 	}
-	public void setDays(List<DayTemplate> days) {
-		this.days = days;
+	public void setDayIds(List<Integer> dayIds) {
+		this.dayIds = dayIds;
 	}
+	
 	
 	
 

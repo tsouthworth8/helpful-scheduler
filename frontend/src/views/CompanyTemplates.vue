@@ -64,21 +64,21 @@
                 <input type="checkbox" id="key" :value="role.id" v-model="shiftTemplate.allowedShiftRoles" /> {{role.title}}
             </div>
 
-            <button id="submit-role-btn" @click.prevent="submitTemplate">Submit</button>
+            <button id="submit-role-btn" @click.prevent="submitShiftTemplate">Submit</button>
         </form>
         </div>
 
         <div class="box">
         <h3>Shift templates</h3>
-        <table id="template-table">
+        <table id="shift-template-table">
             <th></th>
             <th>Start time</th>
             <th>End time</th>
             <th>Allowed Shift Roles</th>
-            <tr v-for="template in templateList" :key="template.id">
+            <tr v-for="template in shiftTemplateList" :key="template.id">
                 <td>
                     <label>
-    					<input type="checkbox" :value="template.id" v-model="selectedTemplates">
+    					<input type="checkbox" :value="template.id" v-model="selectedShiftTemplates">
   					</label>
                 </td>
                 <td>{{template.startTime.hour + ":" + template.startTime.minute}}</td>
@@ -88,6 +88,14 @@
         </table>
 
         <button @click.prevent="deleteShiftTemplates()">Delete Selected</button>
+        <button @click.prevent="createDayTemplate()">Day template from selected</button>
+
+            <form id="day-template-form" v-if="showDayTempForm">
+                <label for="day-temp-nickname">Day Template Name:</label>
+                <input type="text" v-model="dayTemplate.nickname"></input>
+
+                <button id="day-template-submit" @click.prevent="submitDayTemplate">Submit</button>
+            </form>
         </div>
 
         <div class="box">
@@ -97,8 +105,7 @@
         <button @click.prevent="deleteTemplates()">Delete Selected</button>
         </div>
 
-        <p>{{selectedTemplates}}</p>
-
+    <h1>this.dayTemplate: {{this.dayTemplate}}</h1>
     </div>
 </template>
 
@@ -124,8 +131,14 @@ export default {
                 endTime: '',
                 allowedShiftRoles: []
             },
-            templateList: [],
-            selectedTemplates: []
+            shiftTemplateList: [],
+            selectedShiftTemplates: [],
+            showDayTempForm: false,
+            dayTemplate: {
+                id: 0,
+                nickname: '',
+                shiftIds: []
+            }
         }
     },
     methods: {
@@ -143,7 +156,7 @@ export default {
                 console.log(err);
             })
         },
-        getTemplates() {
+        getShiftTemplates() {
             axios.get(`${process.env.VUE_APP_REMOTE_API}/templates/getAll`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("Authorization")
@@ -160,7 +173,7 @@ export default {
                         element.startTime.minute = '00';
                     }
                 })
-                this.templateList = response.data;
+                this.shiftTemplateList = response.data;
             })
             .catch(err => {
                 console.log(err);
@@ -180,11 +193,8 @@ export default {
                 let hour = parseInt(this.userInput.endHour) + 12;
                 this.shiftTemplate.endTime = hour + ":" + this.userInput.endMinute;
             }
-
-            // this.shiftTemplate.startTime = this.userInput.startHour + ":" + this.userInput.startMinute;
-            // this.shiftTemplate.endTime = this.userInput.endHour + ":" + this.userInput.endMinute;
         },
-        submitTemplate() {
+        submitShiftTemplate() {
             this.convertInput();
             console.log(this.shiftTemplate);
 
@@ -195,23 +205,49 @@ export default {
             })
             .then(response => {
                 console.log(response);
-                this.getTemplates();
+                this.getShiftTemplates();
+                this.clearShiftTemplateForm();
             })
             .catch(err => {
                 console.log(err);
             })
         },
+        clearShiftTemplateForm() {
+            this.shiftTemplate.startTime = '';
+            this.shiftTemplate.endTime = '';
+            this.shiftTemplate.allowedShiftRoles = [];
+        },
         deleteShiftTemplates() {
             console.log("Delete templates method reached.")
-            axios.post(`${process.env.VUE_APP_REMOTE_API}/templates/delete`, this.selectedTemplates, {
+            axios.post(`${process.env.VUE_APP_REMOTE_API}/templates/delete`, this.selectedShiftTemplates, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("Authorization")
                 }
             })
             .then(response => {
                 console.log(response);
-                this.getTemplates();
-                this.selectedTemplates = [];
+                this.getShiftTemplates();
+                this.selectedShiftTemplates = [];
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        createDayTemplate() {
+            this.showDayTempForm = true;
+        },
+        submitDayTemplate() {
+            this.dayTemplate.shiftIds = this.selectedShiftTemplates;
+
+            console.log(this.dayTemplate);
+
+            axios.post(`${process.env.VUE_APP_REMOTE_API}/templates/newDay`, this.dayTemplate, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("Authorization")
+                }
+            })
+            .then(response => {
+                console.log(response);
             })
             .catch(err => {
                 console.log(err);
@@ -219,7 +255,7 @@ export default {
         }
     },
     mounted() {
-        this.getTemplates();
+        this.getShiftTemplates();
         this.getShiftRoles();
     }
 }

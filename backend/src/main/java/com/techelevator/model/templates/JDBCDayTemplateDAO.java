@@ -8,7 +8,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JDBCDayTemplateDAO implements DayTemplateDAO {
 	
 	private JdbcTemplate jdbcTemplate;
@@ -26,10 +28,10 @@ public class JDBCDayTemplateDAO implements DayTemplateDAO {
 		boolean response = false;
 		int nextId = getNextDayTemplateId();
 		
-		String sqlSaveDayTemplate = "INSERT INTO day_templates (id, company_id, nickname) VALUES ?, ?, ?";
+		String sqlSaveDayTemplate = "INSERT INTO day_templates (id, company_id, nickname) VALUES (?, ?, ?)";
 		int dayResult = jdbcTemplate.update(sqlSaveDayTemplate, nextId, companyId, template.getNickname());
 		
-		String sqlSaveShifts = "INSERT INTO shift_day_templates (shift_id, day_id) VALUES ?, ?";
+		String sqlSaveShifts = "INSERT INTO shift_day_templates (shift_id, day_id) VALUES (?, ?)";
 		for(Integer shift : template.getShifts()) {
 			jdbcTemplate.update(sqlSaveShifts, shift, nextId);
 		}
@@ -53,6 +55,23 @@ public class JDBCDayTemplateDAO implements DayTemplateDAO {
 		}
 		
 		return list;
+	}
+	
+	@Override
+	public boolean deleteDayTemplate(long templateId) {
+		boolean answer = false;
+		
+		String sqlDeleteDayRolesJoin = "DELETE * FROM shift_day_templates WHERE day_id = ?";
+		int result1 = jdbcTemplate.update(sqlDeleteDayRolesJoin, templateId);
+		
+		String sqlDeleteDayTemplate = "DELETE * FROM day_templates WHERE id = ?";
+		int result2 = jdbcTemplate.update(sqlDeleteDayTemplate, templateId);
+		
+		if (result1 > 0 && result2 > 0) {
+			answer = true;
+		}
+		
+		return answer;
 	}
 	
 	//HELPER METHODS

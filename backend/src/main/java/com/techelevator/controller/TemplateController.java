@@ -15,9 +15,12 @@ import com.techelevator.authentication.AuthProvider;
 import com.techelevator.model.ShiftRoleDAO;
 import com.techelevator.model.UserDao;
 import com.techelevator.model.templates.DayTemplate;
+import com.techelevator.model.templates.DayTemplateDAO;
 import com.techelevator.model.templates.ShiftTemplate;
 import com.techelevator.model.templates.ShiftTemplateDAO;
 import com.techelevator.model.templates.StringShiftTemplate;
+import com.techelevator.model.templates.WeekTemplate;
+import com.techelevator.model.templates.WeekTemplateDAO;
 import com.techelevator.pojo.ShiftRole;
 
 @CrossOrigin
@@ -33,6 +36,10 @@ public class TemplateController {
 	private UserDao userDAO;
 	@Autowired
 	private ShiftRoleDAO srDAO;
+	@Autowired
+	private DayTemplateDAO dayDAO;
+	@Autowired
+	private WeekTemplateDAO weekDAO;
 	
 	@RequestMapping(path = "/getAll", method = RequestMethod.GET)
 	public List<ShiftTemplate> getAllShiftTemplates() {
@@ -64,13 +71,15 @@ public class TemplateController {
 	}
 	
 	@RequestMapping(path = "/newDay", method = RequestMethod.POST)
-	public boolean newDayTemplate(DayTemplate dayTemplate) {
-		boolean response = false;
-		
-		String sqlSaveNewDayTemplate = "INSERT INTO day_templates (id, nickname) VALUES ?, ?";
-		//int dayTempResult = jdbcTemplate.update(sqlSaveNewDayTemplate, dayTemplate)
-		
-		return response;
+	public boolean newDayTemplate(@RequestBody DayTemplate dayTemplate) {
+		long companyId = userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId());
+		return dayDAO.saveDayTemplate(companyId, dayTemplate);
+	}
+	
+	@RequestMapping(path = "/newWeek", method = RequestMethod.POST)
+	public boolean newDayTemplate(@RequestBody WeekTemplate weekTemplate) {
+		long companyId = userDAO.getCompanyIdByUserId(auth.getCurrentUser().getId());
+		return weekDAO.saveWeekTemplate(companyId, weekTemplate);
 	}
 	
 	@RequestMapping(path = "/delete", method = RequestMethod.POST)
