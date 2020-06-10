@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import com.techelevator.model.CompanyDao;
 import com.techelevator.model.ShiftRoleDAO;
 import com.techelevator.model.UserDao;
 import com.techelevator.pojo.ShiftRole;
-import com.techelevator.pojo.User;
 
 /**
  * ApiController
@@ -95,12 +95,9 @@ public class ApiController {
     }
     
     @RequestMapping(path = "/getRoles", method = RequestMethod.GET)
-    public List<ShiftRole> getCompanyRoles(){
-    	long companyId = user.getCompanyIdByUserId(auth.getCurrentUser().getId());
-    	List<ShiftRole> roles = shift.getAllShiftRoles(companyId);
-    	
-    	return roles;
-    			
+    public List<ShiftRole> getAllShiftRoles () {
+    	List<ShiftRole> roleList = shift.getAllShiftRoles(user.getCompanyIdByUserId(auth.getCurrentUser().getId()));
+    	return roleList;
     }
-    
+
 }

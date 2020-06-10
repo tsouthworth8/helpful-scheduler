@@ -6,7 +6,7 @@ public class DayTemplate implements Template {
 	
 	private int id;
 	private String nickname;
-	private List<ShiftTemplate> shifts;
+	private List<Integer> shiftIds;
 	
 	
 	public int getId() {
@@ -21,11 +21,11 @@ public class DayTemplate implements Template {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public List<ShiftTemplate> getShifts() {
-		return shifts;
+	public List<Integer> getShifts() {
+		return shiftIds;
 	}
-	public void setShifts(List<ShiftTemplate> shifts) {
-		this.shifts = shifts;
+	public void setShifts(List<Integer> shifts) {
+		this.shiftIds = shiftIds;
 	}
 	
 	

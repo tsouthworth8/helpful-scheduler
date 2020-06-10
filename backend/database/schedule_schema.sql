@@ -45,18 +45,15 @@ CREATE TABLE employee (
 
 CREATE TABLE time_off (
         id serial PRIMARY KEY,
-        date_requested date NOT NULL,
-        date_off date NOT NULL,
-        time_start int NOT NULL,
-        time_end int NOT NULL
-        
+        start_time date NOT NULL,
+        end_time date NOT NULL
 );
  
 CREATE TABLE employee_requests (
-        id serial PRIMARY KEY,
         employee_id int NOT NULL,
         time_off_id int NOT NULL,
         
+        CONSTRAINT pk_employee_requests PRIMARY KEY (employee_id, time_off_id),
         CONSTRAINT fk_employee_id FOREIGN KEY (employee_id) REFERENCES employee (id),
         CONSTRAINT fk_time_off_id FOREIGN KEY (time_off_id) REFERENCES time_off (id)
 );
@@ -105,7 +102,10 @@ CREATE TABLE roles_templates (
 
 CREATE TABLE day_templates (
         id serial PRIMARY KEY,
-        nickname varchar(250) NOT NULL
+        company_id int NOT NULL,
+        nickname varchar(250) NOT NULL,
+
+        CONSTRAINT fk_day_templates_company_id FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
 CREATE TABLE shift_day_templates (
@@ -119,7 +119,10 @@ CREATE TABLE shift_day_templates (
 
 CREATE TABLE week_templates (
         id serial PRIMARY KEY,
-        nickname varchar(250) NOT NULL
+        company_id int NOT NULL,
+        nickname varchar(250) NOT NULL,
+
+        CONSTRAINT fk_week_templates_company_id FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
 CREATE TABLE day_week_templates (

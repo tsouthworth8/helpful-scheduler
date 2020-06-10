@@ -11,9 +11,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.model.ShiftRoleDAO;
+import com.techelevator.pojo.ShiftRole;
+
 @Component
 public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private ShiftRoleDAO srDAO;
 
 	@Autowired
 	public JDBCShiftTemplateDAO(DataSource dataSource) {
@@ -21,12 +27,17 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 	
 	@Override
-	public boolean saveCompanyShiftTemplate(int companyId, ShiftTemplate template) {
+	public boolean saveCompanyShiftTemplate(long companyId, ShiftTemplate template) {
 		boolean answer = false;
 		int nextId = getNextShiftTemplateId();
 		
 		String sqlSaveShiftTemplate = "INSERT INTO shift_templates (id, start_time, end_time) VALUES (?, ?, ?)";
 		int shiftResults = jdbcTemplate.update(sqlSaveShiftTemplate, nextId, template.getStartTime(), template.getEndTime());
+		
+		String sqlSaveAllowedShiftRoles = "INSERT INTO roles_templates VALUES (?, ?)";
+		for(ShiftRole role : template.getAllowedShiftRoles()) {
+			jdbcTemplate.update(sqlSaveAllowedShiftRoles, role.getId(), nextId);
+		}
 		
 		String sqlSaveTemplateToCompany = "INSERT INTO shift_templates_company (shift_template_id, company_id) VALUES (?, ?)";
 		int companyResults = jdbcTemplate.update(sqlSaveTemplateToCompany, nextId, companyId);
@@ -38,8 +49,27 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 		return answer;
 	}
 	
+	public boolean deleteCompanyShiftTemplate(long templateId, long companyId) {
+		boolean answer = false;
+		
+		String sqlDeleteRoleJoin = "DELETE FROM roles_templates WHERE shift_template_id = ?";
+		int roleResult = jdbcTemplate.update(sqlDeleteRoleJoin, templateId);
+		
+		String sqlDeleteCompanyJoin = "DELETE FROM shift_templates_company WHERE shift_template_id = ? AND company_id = ?";
+		int companyResult = jdbcTemplate.update(sqlDeleteCompanyJoin, templateId, companyId);
+		
+		String sqlDeleteShiftTemplate = "DELETE FROM shift_templates WHERE id = ?";
+		int templateResult = jdbcTemplate.update(sqlDeleteShiftTemplate, templateId);
+		
+		if (templateResult > 0 && companyResult > 0 && roleResult > 0) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+	
 	@Override
-	public boolean saveEmployeeShiftTemplate(int employeeId, ShiftTemplate template) {
+	public boolean saveEmployeeShiftTemplate(long employeeId, ShiftTemplate template) {
 		boolean answer = false;
 		int nextId = getNextShiftTemplateId();
 		
@@ -57,7 +87,7 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	}
 
 	@Override
-	public List<ShiftTemplate> getAllShiftTemplates(int companyId) {
+	public List<ShiftTemplate> getAllShiftTemplates(long companyId) {
 		String sqlGetTemplateIds = "SELECT shift_template_id FROM shift_templates_company WHERE company_id = ?";
 		SqlRowSet idsResult = jdbcTemplate.queryForRowSet(sqlGetTemplateIds, companyId);
 		
@@ -70,6 +100,7 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 		String sqlGetCompanyTemplates = "SELECT * FROM shift_templates WHERE id = ?";
 		for(Integer id : idList) {
 			SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetCompanyTemplates, id);
+			result.next();
 			templateList.add(mapRowToShiftTemplate(result));
 		}
 		
@@ -80,9 +111,12 @@ public class JDBCShiftTemplateDAO implements ShiftTemplateDAO {
 	//HELPER METHODS
 	private ShiftTemplate mapRowToShiftTemplate(SqlRowSet result) {
 		ShiftTemplate template = new ShiftTemplate();
+		List<ShiftRole> roleList = srDAO.getShiftRolesByTemplateId(result.getInt("id"));
+		
 		template.setId(result.getInt("id"));
 		template.setStartTime(result.getTime("start_time").toLocalTime());
-		template.setStartTime(result.getTime("start_time").toLocalTime());
+		template.setEndTime(result.getTime("end_time").toLocalTime());
+		template.setAllowedShiftRoles(roleList);
 		return template;
 	}
 	

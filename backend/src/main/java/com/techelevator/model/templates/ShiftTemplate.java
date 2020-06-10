@@ -7,12 +7,12 @@ import com.techelevator.pojo.ShiftRole;
 
 public class ShiftTemplate implements Template {
 	
-	private int id;
+	private long id;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private List<Integer> allowedShiftRoles;
+	private List<ShiftRole> allowedShiftRoles;
 	
-	public ShiftTemplate(int id, LocalTime startTime, LocalTime endTime, List<Integer> allowedShiftRoles) {
+	public ShiftTemplate(int id, LocalTime startTime, LocalTime endTime, List<ShiftRole> allowedShiftRoles) {
 		this.id = id;
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -25,17 +25,23 @@ public class ShiftTemplate implements Template {
 		this.endTime = endTime;
 	}
 	
-	public ShiftTemplate(LocalTime startTime, LocalTime endTime, List<Integer> allowedShiftRoles) {
+	public ShiftTemplate(LocalTime startTime, LocalTime endTime, List<ShiftRole> allowedShiftRoles) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	
+//	public ShiftTemplate(String startTime, String endTime, List<ShiftRole> allowedShiftRoles) {
+//		this.startTime = LocalTime.parse(startTime);
+//		this.endTime = LocalTime.parse(endTime);
+//		this.allowedShiftRoles = allowedShiftRoles;
+//	}
+	
 	public ShiftTemplate() {
 	}
 	
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {
@@ -53,10 +59,10 @@ public class ShiftTemplate implements Template {
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
 	}
-	public List<Integer> getAllowedShiftRoles() {
+	public List<ShiftRole> getAllowedShiftRoles() {
 		return allowedShiftRoles;
 	}
-	public void setAllowedShiftRoles(List<Integer> allowedShiftRoles) {
+	public void setAllowedShiftRoles(List<ShiftRole> allowedShiftRoles) {
 		this.allowedShiftRoles = allowedShiftRoles;
 	}
 	
