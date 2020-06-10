@@ -10,7 +10,7 @@ public interface ShiftRoleDAO {
 	public List<ShiftRole> getAllShiftRoles(long companyId);
 	public List<ShiftRole> getShiftRolesByTemplateId(long templateId);
 	public ShiftRole getShiftRoleById(int id);
-	public boolean clearAllShiftRoles(int companyId);
+	public boolean clearAllShiftRoles(long companyId);
 	public int getNextShiftRoleId();
 
 }

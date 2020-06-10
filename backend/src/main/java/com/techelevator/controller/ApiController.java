@@ -99,4 +99,5 @@ public class ApiController {
     	List<ShiftRole> roleList = shift.getAllShiftRoles(user.getCompanyIdByUserId(auth.getCurrentUser().getId()));
     	return roleList;
     }
+
 }
