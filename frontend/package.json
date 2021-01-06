@@ -17,7 +17,7 @@
     "@fullcalendar/daygrid": "^4.4.0",
     "@fullcalendar/timegrid": "^4.4.0",
     "@fullcalendar/vue": "^4.4.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bulma": "^0.8.2",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
